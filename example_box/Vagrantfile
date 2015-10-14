@@ -1,0 +1,8 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.provider :filoo do |filoo|
+  	filoo.filoo_api_entry_point = "https://api.filoo.de/api/v1/"
+  end
+end

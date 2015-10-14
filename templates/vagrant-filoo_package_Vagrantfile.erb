@@ -1,0 +1,5 @@
+Vagrant.configure("2") do |config|
+  config.vm.provider "filoo" do |filoo|
+	filoo.filoo_api_key "<%= filoo_api_key %>", cd_image_name: "<%= cd_image_name %>", filoo_api_entry_point: "<%= filoo_api_entry_point %>"
+  end
+end
