@@ -7,6 +7,10 @@ filoo hosting: https://www.filoo.de/vserver.html
 
 NOTE: This plugin requires Vagrant 1.7x
 
+#TODO
+set servername 4.1.16 vserver/setcustomname
+
+
 ## Usage
 
 Install using standard Vagrant 1.1+ plugin installation methods. After
@@ -53,7 +57,7 @@ Vagrant.configure("2") do |config|
     filoo.filoo_api_key = "Your Api key"
     # or to use environment variable uncomment this
     #filoo.filoo_api_key = ENV['FILOO_API_KEY']
-    filoo.filoo_api_entry_point = "https://api.filoo.de/api/v1/"
+    filoo.filoo_api_entry_point = "https://api.filoo.de/api/v1"
     filoo.cd_image_name = "Debian 6.0 - 64bit"
   end
 end
