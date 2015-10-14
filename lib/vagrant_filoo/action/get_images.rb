@@ -1,4 +1,4 @@
-require_relative "../cloud_compute"
+require_relative '../errors'
 
 module VagrantPlugins
   module Filoo

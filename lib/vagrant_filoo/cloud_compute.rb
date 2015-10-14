@@ -293,8 +293,8 @@ module VagrantPlugins
         imageList.each { |imageInfo|
           if !imageInfo["cd"].nil? and imageInfo["autoinstall"] == 1
             autoInstallImagesHash[imageInfo["cd"]] = imageInfo["cd_imageid"]
-            end
-            }
+          end
+         }
         return autoInstallImagesHash;
       end
       

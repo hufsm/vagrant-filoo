@@ -1,4 +1,5 @@
 require_relative "../cloud_compute"
+require_relative '../errors'
 
 module VagrantPlugins
   module Filoo
@@ -18,6 +19,10 @@ module VagrantPlugins
             raise Errors::ImagesNotLoaded
           end
           config  = env[:machine].provider_config
+          if env[:images][config.cd_image_name].nil?
+            raise VagrantPlugins::Filoo::Errors::ConfigError, 
+              message: "Filoo Configuration parameter 'cd_image_name' with value #{config.cd_image_name} references not a filoo image that has autoinstall flag set. Please use one of the folowing image names #{env[:images].keys.join(' | ')}"
+          end
           imageId = "#{env[:images][config.cd_image_name]}".to_i
           params = {
             :type => config.type,
