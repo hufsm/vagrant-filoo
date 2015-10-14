@@ -178,11 +178,14 @@ module VagrantPlugins
       autoload :IsStopped, action_root.join("is_stopped")
       autoload :MessageAlreadyCreated, action_root.join("message_already_created")
       autoload :MessageNotCreated, action_root.join("message_not_created")
-      autoload :PackageInstance, action_root.join("package_instance")
+      autoload :ReadSSHInfo, action_root.join("read_ssh_info")
+      autoload :ReadState, action_root.join("read_state")
+      autoload :CreateServer, action_root.join("create_server")
+      autoload :GetImages, action_root.join("get_images")
       autoload :StartInstance, action_root.join("start_instance")
       autoload :ReadState, action_root.join("read_state")
-      #autoload :StopInstance, action_root.join("stop_instance")
-      #autoload :TerminateInstance, action_root.join("terminate_instance")
+      autoload :StopInstance, action_root.join("stop_instance")
+      autoload :TerminateInstance, action_root.join("terminate_instance")
     end
   end
 end
