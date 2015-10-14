@@ -5,7 +5,7 @@ module VagrantPlugins
     module Errors
 
       class VagrantFilooError < Vagrant::Errors::VagrantError
-        error_namespace("vagrant_filoo.gen_error")
+        error_namespace("vagrant_filoo.errors")
       end
       
       class ImagesNotLoaded < Vagrant::Errors::VagrantError
@@ -24,23 +24,27 @@ module VagrantPlugins
         error_key(:filoo_api_error)
       end
       
+      class FilooJobFailedError < VagrantFilooError
+        error_key("filoo_job_failed_error")
+      end
+      
       class FilooJobResultTimeoutError < VagrantFilooError
         error_key(:filoo_job_result_timeout_error)
       end
       
-      class StartInstanceTimeout < FilooJobResultTimeoutError
+      class StartInstanceTimeout < VagrantFilooError
         error_key(:start_instance_timeout)
       end
       
-      class StopInstanceTimeout < FilooJobResultTimeoutError
+      class StopInstanceTimeout < VagrantFilooError
         error_key(:stop_instance_timeout)
       end
 
-      class CreateInstanceTimeout < FilooJobResultTimeoutError
+      class CreateInstanceTimeout < VagrantFilooError
         error_key(:create_instance_timeout)
       end
       
-      class DeleteInstanceTimeout < FilooJobResultTimeoutError
+      class DeleteInstanceTimeout < VagrantFilooError
         error_key(:delete_instance_timeout)
       end
             

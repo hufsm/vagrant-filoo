@@ -36,7 +36,14 @@ $ vagrant box add dummy <url to dummy box>
 ```
 
 And then make a Vagrantfile that looks like the following, filling in
-your information where necessary.
+your information where necessary. 
+
+It is good practice to access the filoo api key via system environment variable. To use environment variable FILOO_API_KEY add following line in the Vagrantfile 
+```
+filoo.filoo_api_key = ENV['FILOO_API_KEY']
+```
+
+as seen in the commented line of config beneath.
 
 ```
 Vagrant.configure("2") do |config|
@@ -44,17 +51,15 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider :filoo do |filoo, override|
     filoo.filoo_api_key = "Your Api key"
+    # or to use environment variable uncomment this
+    #filoo.filoo_api_key = ENV['FILOO_API_KEY']
     filoo.filoo_api_entry_point = "https://api.filoo.de/api/v1/"
     filoo.cd_image_name = "Debian 6.0 - 64bit"
-
-    filoo.cd_image_name = "Debian 6.0 - 64bit"
-    override.ssh.username = "debian"
-    override.ssh.private_key_path = "PATH TO YOUR PRIVATE KEY"
   end
 end
 ```
 
-And then run `vagrant up --provider=filoo`.
+And then run 'vagrant up --provider=filoo'.
 
 This will start an Debian 6.0 - 64bit instance in the Filoo infrastructure
 

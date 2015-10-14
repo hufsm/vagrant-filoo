@@ -20,13 +20,20 @@ module VagrantPlugins
             serverStatus = VagrantPlugins::Filoo::CloudCompute::getServerStatus(vmid, @baseUrl, @apiKey)
             env[:machine_state_id] = machineStateIdFromState(serverStatus)
           rescue VagrantPlugins::Filoo::Errors::FilooApiError => e
-            if  e.code == 403
+            errorCode = nil;
+            begin
+              errorCode = JSON.parse(e.message)["code"]
+            rescue JSON::ParserError => jsonErr
+              raise e
+            end
+            if  errorCode == 403
               env[:machine_state_id] = :not_created
             else
               raise e
             end
-          end
-          @app.call(env)
+            en
+         end
+         @app.call(env)
         end
         
         def machineStateIdFromState(serverStatus)

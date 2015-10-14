@@ -214,8 +214,12 @@ module VagrantPlugins
       # list servers
       
       def self.getServers(baseUrl, apiKey)
-        serverList = self.call(baseUrl + LIST_SERVER_RESOURCE,apiKey, {:detailed => false})['return']
-        hashFromServerList(serverList)
+        begin
+          serverList = self.call(baseUrl + LIST_SERVER_RESOURCE,apiKey, {:detailed => false})['return']
+          hashFromServerList(serverList)
+        rescue ArgumentError => e
+          raise ConfigError, e.message
+        end
       end
       
       def self.hashFromServerList serverList
@@ -242,7 +246,11 @@ module VagrantPlugins
         if vmid.nil?
           return :not_created 
         end
-        self.call(baseUrl + SERVERSTATUS_RESOURCE, apiKey, {:vmid => vmid, :detailed => true})["return"]
+        begin
+          return self.call(baseUrl + SERVERSTATUS_RESOURCE, apiKey, {:vmid => vmid, :detailed => true})["return"]
+        rescue ArgumentError => e
+          raise VagrantPlugins::Filoo::Errors::ConfigError, message: e.message
+        end
       end
       
       def self.checkServerStatus(vmid, shouldParams, baseUrl, apiKey)
@@ -275,7 +283,12 @@ module VagrantPlugins
       IMAGES_RESOURCE = "/vserver/image"
       
       def self.getAutoInstallImages(baseUrl, apiKey)
-        imageList = self.call(baseUrl + IMAGES_RESOURCE, apiKey, {:action => "list"})['return']
+        imageList = nil;
+        begin
+          imageList = self.call(baseUrl + IMAGES_RESOURCE, apiKey, {:action => "list"})['return']
+        rescue ArgumentError => e
+          raise ConfigError, e.message
+        end
         autoInstallImagesHash = {}
         imageList.each { |imageInfo|
           if !imageInfo["cd"].nil? and imageInfo["autoinstall"] == 1
@@ -308,7 +321,12 @@ module VagrantPlugins
       
      # asynchron calls
      def self.call4JobId(url, apiKey, params)
-       apiCallPayload = self.call(url, apiKey, params)["return"]
+       apiCallPayload = nil
+       begin
+         apiCallPayload = self.call(url, apiKey, params)["return"]
+       rescue ArgumentError => e
+         raise ConfigError, e.message
+       end
        if !apiCallPayload.is_a?(Hash)
          raise VagrantPlugins::Filoo::Errors::FilooApiError,
            code: 500,
@@ -343,7 +361,12 @@ module VagrantPlugins
      def self.requestJobStatusWithResult(jobId, baseUrl, apiKey)
        url = baseUrl + SHOWJOB_RESOURCE
        params =  {:jobid => jobId}
-       resp = self.call(url, apiKey, {:jobid => jobId})
+       resp = nil
+       begin
+         resp = self.call(url, apiKey, {:jobid => jobId})
+       rescue ArgumentError => e
+         raise ConfigError, e.message
+       end
        if resp["status"]["description"] == "jobID not found"
          raise VagrantPlugins::Filoo::Errors::FilooApiError,
            code: 500,
@@ -421,6 +444,13 @@ module VagrantPlugins
  
      #http handling
      def self.doHttpCall(url, params, apiKey)
+       if apiKey.nil? or apiKey == ""
+         raise ArgumentError, "apiKey must not be nil and not an empty string"
+       end
+       if !(url =~ URI::regexp)
+         raise ArgumentError, "url must be a valid http resource but is #{url}"
+       end
+       
        boundary = createBoundary
        headers = { Authorization:  apiKey, :content_type => "multipart/form-data; boundary=----#{boundary}"}
        body = createBody(params, boundary)
@@ -444,7 +474,8 @@ module VagrantPlugins
              code: e.http_code,
              message: "No Access granted on call to #{url} using parameters #{params.to_json}",
              description: e.http_body
-         
+           
+           raise ex
          rescue RestClient::NotAcceptable => e
            raise VagrantPlugins::Filoo::Errors::FilooApiError,
              code: e.http_code,
@@ -452,8 +483,10 @@ module VagrantPlugins
              description: e.http_body    
              
          rescue RestClient::RequestFailed => e
+           puts "#{e}"
            raise VagrantPlugins::Filoo::Errors::VagrantFilooError,
              message: e.message
+             code -1
        end
        if resp.code != 200
          raise VagrantPlugins::Filoo::Errors::FilooApiError, 

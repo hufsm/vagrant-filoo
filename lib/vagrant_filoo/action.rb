@@ -183,7 +183,6 @@ module VagrantPlugins
       autoload :CreateServer, action_root.join("create_server")
       autoload :GetImages, action_root.join("get_images")
       autoload :StartInstance, action_root.join("start_instance")
-      autoload :ReadState, action_root.join("read_state")
       autoload :StopInstance, action_root.join("stop_instance")
       autoload :TerminateInstance, action_root.join("terminate_instance")
     end
