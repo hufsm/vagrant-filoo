@@ -364,6 +364,7 @@ module VagrantPlugins
        resp = nil
        begin
          resp = self.call(url, apiKey, {:jobid => jobId})
+           puts resp.to_json
        rescue ArgumentError => e
          raise ConfigError, e.message
        end
@@ -483,7 +484,6 @@ module VagrantPlugins
              description: e.http_body    
              
          rescue RestClient::RequestFailed => e
-           puts "#{e}"
            raise VagrantPlugins::Filoo::Errors::VagrantFilooError,
              message: e.message
              code -1

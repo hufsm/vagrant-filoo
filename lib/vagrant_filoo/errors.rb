@@ -8,7 +8,7 @@ module VagrantPlugins
         error_namespace("vagrant_filoo.errors")
       end
       
-      class ImagesNotLoaded < Vagrant::Errors::VagrantError
+      class ImagesNotLoaded < VagrantFilooError
         error_key "images_not_loaded"
       end
       
@@ -56,6 +56,10 @@ module VagrantPlugins
         error_key(:mkdir_error)
       end
 
+      class VMBootTimeout < VagrantFilooError
+        error_key(:boot_timeout)
+      end
+      
     end
   end
 end

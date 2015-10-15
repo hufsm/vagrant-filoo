@@ -82,41 +82,34 @@ module VagrantPlugins
           b.use BoxCheckOutdated
           b.use Call, IsCreated do |env1, b1|
             if env1[:result]
-              b1.use Call, IsStopped do |env2, b2|
+              b1.use Call, IsStopped do |env2, b1|
                 if env2[:result]
-                  b2.use StartInstance # restart this instance  
+                  b1.use StartInstance # restart this instance  
                 else
-                  b2.use MessageAlreadyCreated # TODO write a better message
+                  b1.use MessageAlreadyCreated # TODO write a better message
                 end
               end
             else
-              b1.use action_prepare_boot do |env1, b1|
-                if env1[:result]["vmstatus"] == "stopped"
-                  b1.use StartInstance # launch a new instance
-                  
-                elseif env1[:result]["vmstatus"] != "running"
+              b1.use Provision
+              b1.use SyncedFolders
+              b1.use GetImages
+              b1.use CreateServer do |env2, b2|
+                if env2[:result]["vmstatus"] == "stopped"
+                  b2.use StartInstance # launch a new instance
+                elseif env2[:result]["vmstatus"] != "running"
                   raise VagrantPlugins::Filoo::Errors::UnexpectedStateError,
-                  resource: "/vserver/status",
-                  state: {"vmstatus" => env1[:result]["vmstatus"]},
-                  message: "Unexpected vmstatus after create Server done, vmstatus " + env1[:result]["vmstatus"],
-                  description: "Server with vmid  #{env1[:result]['vmid']} should be running or stopped "
-                  end
+                    resource: "/vserver/status",
+                    state: {"vmstatus" => env1[:result]["vmstatus"]},
+                    message: "Unexpected vmstatus after create Server done, vmstatus " + env1[:result]["vmstatus"],
+                    description: "Server with vmid  #{env1[:result]['vmid']} should be running or stopped "
+                end
               end
+              b1.use WaitForCommunicator
             end
           end
         end
       end
-
-      def self.action_prepare_boot
-        Vagrant::Action::Builder.new.tap do |b|
-          b.use Provision
-          b.use SyncedFolders
-          b.use GetImages
-          b.use CreateServer 
-        end
-      end
-      
-      
+ 
       # This action is called to SSH into the machine.
       def self.action_ssh
         Vagrant::Action::Builder.new.tap do |b|

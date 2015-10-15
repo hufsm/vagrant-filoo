@@ -28,7 +28,10 @@ module VagrantPlugins
                    state: serverStatus,
             description: "Server with vmid #{vmid} should have server status with subfield field ipadress network_settings present"
           end
-          env[:machine_ssh_info] = { :host => serverStatus["network_settings"][0]["ipadress"], :port => 22 }
+          env[:machine_ssh_info] = { :host => serverStatus["network_settings"][0]["ipadress"], 
+            :port => 22 #, 
+            #:username => "root"
+            }
           @app.call(env)
         end
       end

@@ -1,5 +1,6 @@
 require_relative "../cloud_compute"
 require_relative '../errors'
+require 'vagrant_filoo/util/timer'
 
 module VagrantPlugins
   module Filoo
@@ -9,12 +10,10 @@ module VagrantPlugins
           @app    = app
           @baseUrl =env[:machine].provider_config.filoo_api_entry_point
           @apiKey = env[:machine].provider_config.filoo_api_key
+          @logger = Log4r::Logger.new("vagrant_filoo::action::create_instance")
         end
         
         def call(env)
-          puts env[:machine].provider_config.filoo_api_entry_point
-          puts env[:machine].provider_config.type
-          
           if (env[:images].nil?)
             raise Errors::ImagesNotLoaded
           end
