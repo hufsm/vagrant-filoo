@@ -65,9 +65,6 @@ en:
           Run `vagrant status`
           to find out what can be done about this state, or `vagrant destroy`
           if you want to start over.
-  
-      boot_timeout: |-        
-           Booting the machine timed out.
           
     finding_flavor: "Finding flavor for server..."
     finding_image: "Finding image for server..."

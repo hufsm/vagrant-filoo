@@ -54,12 +54,7 @@ module VagrantPlugins
 
       class MkdirError < VagrantFilooError
         error_key(:mkdir_error)
-      end
-
-      class VMBootTimeout < VagrantFilooError
-        error_key(:boot_timeout)
-      end
-      
+      end      
     end
   end
 end
