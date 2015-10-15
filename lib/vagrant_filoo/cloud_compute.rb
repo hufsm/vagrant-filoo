@@ -1,6 +1,6 @@
 require 'rest-client'
 require_relative 'errors'
-require 'JSON'
+require 'json'
 
 module VagrantPlugins
   module Filoo

@@ -1,4 +1,4 @@
-require 'JSON'
+require 'json'
 require_relative "../cloud_compute"
 
 
@@ -29,8 +29,8 @@ module VagrantPlugins
             description: "Server with vmid #{vmid} should have server status with subfield field ipadress network_settings present"
           end
           env[:machine_ssh_info] = { :host => serverStatus["network_settings"][0]["ipadress"], 
-            :port => 22 #, 
-            #:username => "root"
+            :port => 22 , 
+            :username => "root"
             }
           @app.call(env)
         end

@@ -1,6 +1,6 @@
 require_relative "../cloud_compute"
 require "vagrant/machine_state"
-
+require 'json'
 
 module VagrantPlugins
   module Filoo
