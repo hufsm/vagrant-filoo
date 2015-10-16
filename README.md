@@ -105,7 +105,6 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-
 ## Networks
 
 Networking features in the form of `config.vm.network` are not
@@ -120,12 +119,25 @@ There is minimal support for synced folders. Upon `vagrant up`,
 `rsync` (if available) to uni-directionally sync the folder to
 the remote machine over SSH.
 
+Linux and Windows clients optionally can use sshfs to mount a folder on the network or to connect a network drive. While the Linux implementation via fuse is quite stable the windows variant is not. We have successfully  tested under Windows 7. Under Windows the re-connect after a network cut-off sometimes fails.
+
+General Information: https://de.wikipedia.org/wiki/SSHFS
+Windows build: https://code.google.com/p/win-sshfs/
+
+
+See [Vagrant Synced folders: rsync](https://docs.vagrantup.com/v2/synced-folders/rsync.html)
+
+## Synced Folders
+
+There is minimal support for synced folders. Upon `vagrant up`,
+`vagrant reload`, and `vagrant provision`, the Filoo provider will use
+`rsync` (if available) to uni-directionally sync the folder to
+the remote machine over SSH.
+
 See [Vagrant Synced folders: rsync](https://docs.vagrantup.com/v2/synced-folders/rsync.html)
 
 
 ## Other Examples
-
-
 
 
 

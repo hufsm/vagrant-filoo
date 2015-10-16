@@ -39,7 +39,7 @@ module VagrantPlugins
           env[:result] = VagrantPlugins::Filoo::CloudCompute::createServer(params, @baseUrl, @apiKey)
           env[:machine].id = env[:result]["vmid"]
           #env[:machine].name  = env[:result]["custom_vmname"]
-          env[:ui].info(" -- Server created, server state #{env[:result]}")
+          env[:ui].info(" -- Server created, server state #{env[:result]}")      
           @app.call(env)
         end
       end

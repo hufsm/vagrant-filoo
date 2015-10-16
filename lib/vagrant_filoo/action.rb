@@ -67,12 +67,12 @@ module VagrantPlugins
             end
 
             b2.use Provision
-            b2.use SyncedFolders
+            #b2.use SyncedFolders
           end
         end
       end
 
-      
+
       # This action is called to bring the box up from nothing.
       include Vagrant::Action::Builtin
       def self.action_up
@@ -90,8 +90,8 @@ module VagrantPlugins
                 end
               end
             else
-              b1.use Provision
-              b1.use SyncedFolders
+              #b1.use Provision
+              #b1.use SyncedFolders
               b1.use GetImages
               b1.use CreateServer do |env2, b2|
                 if env2[:result]["vmstatus"] == "stopped"
@@ -105,6 +105,7 @@ module VagrantPlugins
                 end
               end
               b1.use WaitForCommunicator
+              #b1.use Wait
             end
           end
         end
@@ -178,6 +179,7 @@ module VagrantPlugins
       autoload :StartInstance, action_root.join("start_instance")
       autoload :StopInstance, action_root.join("stop_instance")
       autoload :TerminateInstance, action_root.join("terminate_instance")
+      autoload :Wait, action_root.join("wait")
     end
   end
 end
