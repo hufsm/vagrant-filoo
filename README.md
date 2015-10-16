@@ -114,16 +114,12 @@ the filoo machine.
 
 ## Synced Folders
 
-There is minimal support for synced folders. Upon `vagrant up`,
-`vagrant reload`, and `vagrant provision`, the FILOO provider will use
-`rsync` (if available) to uni-directionally sync the folder to
-the remote machine over SSH.
+Shared folders are not supported at the current state.
 
 Linux and Windows clients optionally can use sshfs to mount a folder on the network or to connect a network drive. While the Linux implementation via fuse is quite stable the windows variant is not. We have successfully  tested under Windows 7. Under Windows the re-connect after a network cut-off sometimes fails.
 
 General Information: https://de.wikipedia.org/wiki/SSHFS
 Windows build: https://code.google.com/p/win-sshfs/
-
 
 See [Vagrant Synced folders: rsync](https://docs.vagrantup.com/v2/synced-folders/rsync.html)
 
