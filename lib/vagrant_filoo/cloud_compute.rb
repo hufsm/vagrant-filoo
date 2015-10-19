@@ -5,7 +5,8 @@ require 'json'
 module VagrantPlugins
   module Filoo
     module CloudCompute
-
+      LOGGER = Log4r::Logger.new("vagrant_filoo::cloud_compute")
+      
       ################################
       # Application specific methods #
       ################################
@@ -364,7 +365,6 @@ module VagrantPlugins
        resp = nil
        begin
          resp = self.call(url, apiKey, {:jobid => jobId})
-           puts resp.to_json
        rescue ArgumentError => e
          raise ConfigError, e.message
        end
@@ -401,7 +401,7 @@ module VagrantPlugins
            message: "Unexpected return value to Api Call POST " +  url + " #{params} " + {:jobid => jobId}.to_json,
              description: "Response has no field job_param in result. Response:  " + returnVal.to_json
        end
-       
+       LOGGER.info("Filoo Job #{resp['return']['job_command']} #{resp['return']['job_status_text']}")
        case returnVal['job_status_text']
          when 'finished'
            jobResult = nil
