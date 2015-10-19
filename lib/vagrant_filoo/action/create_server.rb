@@ -10,7 +10,6 @@ module VagrantPlugins
           @app    = app
           @baseUrl =env[:machine].provider_config.filoo_api_entry_point
           @apiKey = env[:machine].provider_config.filoo_api_key
-          @logger = Log4r::Logger.new("vagrant_filoo::action::create_instance")
         end
         
         def call(env)
