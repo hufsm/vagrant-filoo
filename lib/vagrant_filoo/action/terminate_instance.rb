@@ -15,9 +15,9 @@ module VagrantPlugins
         def call(env)
           vmid = env[:machine].id
           env[:result] = VagrantPlugins::Filoo::CloudCompute::deleteServer(vmid, @baseUrl, @apiKey)
+          env[:machine].id = nil
           @app.call(env)
         end
-        
       end
     end
   end
