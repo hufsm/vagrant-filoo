@@ -1,9 +1,12 @@
 # vagrant-filoo
 Vagrant filoo provisioner
 
-This is a Vagrant 1.7x plugin that adds an filoo provider to Vagrant, allowing Vagrant to control and provision machines within the filoo public and private cloud.
+This is a Vagrant 1.7x plugin that adds an  provider for filoo hosting to Vagrant, allowing Vagrant to control and provision machines within the filoo public and private cloud.
 
-filoo hosting: https://www.filoo.de/vserver.html
+
+![htps://www.filoo.de/vserver.html](/doc/img_res/filoo_logo.png?raw=true )
+
+htps://www.filoo.de/vserver.html
 
 NOTE: This plugin requires Vagrant 1.7x
 
