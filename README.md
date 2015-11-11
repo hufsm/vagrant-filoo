@@ -11,18 +11,17 @@ htps://www.filoo.de/vserver.html
 NOTE: This plugin requires Vagrant 1.7x
 
 #TODO
-set servername 4.1.16 vserver/setcustomname
-support network features 
+- set servername 4.1.16 vserver/setcustomname
+- support network features
 
+```
 config.vm.network "private_network", ip: "192.168.0.17"
 config.vm.network "public_network", ip: "192.168.0.17"
-
+```
 
 ## Usage
 
-Install using standard Vagrant 1.1+ plugin installation methods. After
-installing, `vagrant up` and specify the `filoo` provider. An example is
-shown below.
+Install using standard Vagrant 1.1+ plugin installation methods. After installing, `vagrant up` and specify the `filoo` provider. An example is shown below.
 
 ```
 $ vagrant plugin install vagrant-filoo
@@ -31,25 +30,20 @@ $ vagrant up --provider=filoo
 ...
 ```
 
-Of course prior to doing this, you'll need to obtain an Filoo-compatible
-box file for Vagrant.
+Of course prior to doing this, you'll need to obtain an Filoo-compatible box file for Vagrant.
 
 ## Quick Start
 
-After installing the plugin (instructions above), the quickest way to get
-started is to actually use a dummy Filoo box and specify all the details
-manually within a `config.vm.provider` block. So first, add the dummy
-box using any name you want:
+After installing the plugin (instructions above), the quickest way to get started is to actually use a dummy Filoo box and specify all the details manually within a `config.vm.provider` block. So first, add the dummy box using any name you want:
 
 ```
 $ vagrant box add dummy <url to dummy box>
 ...
 ```
 
-And then make a Vagrantfile that looks like the following, filling in
-your information where necessary. 
+And then make a Vagrantfile that looks like the following, filling in your information where necessary.
 
-It is good practice to access the filoo api key via system environment variable. To use environment variable FILOO_API_KEY add following line in the Vagrantfile 
+It is good practice to access the filoo api key via system environment variable. To use environment variable FILOO_API_KEY add following line in the Vagrantfile
 ```
 filoo.filoo_api_key = ENV['FILOO_API_KEY']
 ```
@@ -63,7 +57,7 @@ Vagrant.configure("2") do |config|
   config.vm.provider :filoo do |filoo, override|
     filoo.filoo_api_key = "Your Api key"
     # or to use environment variable uncomment this
-    #filoo.filoo_api_key = ENV['FILOO_API_KEY']
+    # filoo.filoo_api_key = ENV['FILOO_API_KEY']
     filoo.filoo_api_entry_point = "https://api.filoo.de/api/v1"
     filoo.cd_image_name = "Debian 6.0 - 64bit"
   end
@@ -162,7 +156,7 @@ $ bundle exec rake
 If those pass, you're ready to start developing the plugin. You can test
 the plugin without installing it into your Vagrant environment by just
 creating a `Vagrantfile` in the top level of this directory (it is gitignored)
-and add the following line to your `Vagrantfile` 
+and add the following line to your `Vagrantfile`
 ```ruby
 Vagrant.require_plugin "vagrant_filoo"
 ```
