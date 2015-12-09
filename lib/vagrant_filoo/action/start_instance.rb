@@ -12,13 +12,14 @@ module VagrantPlugins
           @app    = app
           @baseUrl =env[:machine].provider_config.filoo_api_entry_point
           @apiKey = env[:machine].provider_config.filoo_api_key
+          @filooConfig = env[:machine].provider_config
           @logger = Log4r::Logger.new("vagrant_filoo::action::start_instance")
         end
 
         def call(env)
           env[:metrics] ||= {}
           vmid = env[:machine].id
-          env[:result] = VagrantPlugins::Filoo::CloudCompute::startInstance(vmid, @baseUrl, @apiKey) 
+          env[:result] = VagrantPlugins::Filoo::CloudCompute::startInstance(vmid, @baseUrl, @apiKey, @filooConfig) 
           env[:ui].info("Machine #{vmid} successfully started, state #{env[:result].to_json}")
           @logger.info("Time to instance ready: #{env[:metrics]["instance_ready_time"]}")
 

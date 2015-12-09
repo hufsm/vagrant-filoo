@@ -112,6 +112,8 @@ en:
         Warning! The Rackspace provider doesn't support any of the Vagrant
         high-level network configurations (`config.vm.network`). They
         will be silently ignored.
+    waiting_for_ssh: |-
+      Waiting for SSH to become available...
     warn_winrm_password: |-
         Warning! Vagrant has no way to store the Administrator password generated
         by Rackspace for later use with WinRM. Please configure Vagrant to use

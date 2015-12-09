@@ -144,7 +144,26 @@ module VagrantPlugins
       
       START_INSTANCE_TIMEOUT = 60
       
-      def self.startInstance(vmid, baseUrl, apiKey)
+      def self.startInstance(vmid, baseUrl, apiKey, filooConfig)
+
+        shouldNotChangeParams = {
+          :type => filooConfig.type,
+          :cpu => filooConfig.cpu,
+          :ram => filooConfig.ram,
+          :hdd => filooConfig.hdd
+        }
+        
+        puts ">>>>>>>>>>>startInstance>>>>>>>> "
+        
+        begin
+          checkServerStatus(vmid, shouldNotChangeParams, baseUrl, apiKey)
+        rescue VagrantPlugins::Filoo::Errors::UnexpectedStateError => e
+          puts ">>>>>>>>>>>>>>>>>>>>ERROR "
+          raise VagrantPlugins::Filoo::Errors::ConfigError,
+            message: "Can not Reset filoo provider parameter " + e.invalidKey + " to " + shouldNotChangeParams[e.invalidKey]
+                      + ". Machine was created with parameter " + e.invalidKey + " set to " + shouldNotChangeParams[e.invalidKey]
+        end
+          
         url = "#{baseUrl}#{START_RESOURCE}"
         jobId = call4JobId url, apiKey, {:vmid => vmid}
         jobResult = nil;
@@ -172,9 +191,9 @@ module VagrantPlugins
                     + "to task  #{jobResult[:job_command]} #{jobResult[:job_param]} with jobid #{jobResult[:jobid]}"
             end
             raise e
+          end
+          return serverStatus
         end
-        return serverStatus
-      end
       
       # stop instance
       
@@ -269,6 +288,8 @@ module VagrantPlugins
           if "#{value}" != "#{serverStatus[key]}"
             raise VagrantPlugins::Filoo::Errors::UnexpectedStateError,
               resource: SERVERSTATUS_RESOURCE,
+              invalidKey: key,
+              invalidValue: value,
               state: serverStatus,
               message: "Unexpected State of server list " + serverStatus.to_json,
               description: "Server with vmid #{vmid} should have following params set " + shouldParams.to_json
