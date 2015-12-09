@@ -152,16 +152,14 @@ module VagrantPlugins
           :ram => filooConfig.ram,
           :hdd => filooConfig.hdd
         }
-        
-        puts ">>>>>>>>>>>startInstance>>>>>>>> "
-        
+
         begin
-          checkServerStatus(vmid, shouldNotChangeParams, baseUrl, apiKey)
-        rescue VagrantPlugins::Filoo::Errors::UnexpectedStateError => e
-          puts ">>>>>>>>>>>>>>>>>>>>ERROR "
+          checkServerParameter(vmid, shouldNotChangeParams, baseUrl, apiKey)
+        rescue VagrantPlugins::Filoo::Errors::InvaildServerParameterError => e
+          paramKey = "#{e.paramName}"
           raise VagrantPlugins::Filoo::Errors::ConfigError,
-            message: "Can not Reset filoo provider parameter " + e.invalidKey + " to " + shouldNotChangeParams[e.invalidKey]
-                      + ". Machine was created with parameter " + e.invalidKey + " set to " + shouldNotChangeParams[e.invalidKey]
+            message: "Can not update filoo provider parameter '#{e.paramName}'. Parameter 'filoo.#{e.paramName}' must be set to #{e.serverStatus[paramKey]}. 
+             Please create new instance if you need updated this parameters."
         end
           
         url = "#{baseUrl}#{START_RESOURCE}"
@@ -274,6 +272,21 @@ module VagrantPlugins
       end
       
       def self.checkServerStatus(vmid, shouldParams, baseUrl, apiKey)
+        
+        begin
+          return checkServerParameter(vmid, shouldParams, baseUrl, apiKey)
+        rescue VagrantPlugins::Filoo::Errors::InvaildServerParameterError => e
+          raise VagrantPlugins::Filoo::Errors::UnexpectedStateError,
+            resource: SERVERSTATUS_RESOURCE,
+            state: e.serverStatus,
+            message: "Unexpected State of server " + serverStatus.to_json,
+            description: "Server with vmid #{vmid} should have following params set " + shouldParams.to_json
+              + " but has status " + e.serverStatus 
+        end
+
+      end
+      
+      def self.checkServerParameter(vmid, shouldParams, baseUrl, apiKey)
         serverStatus = self.getServerStatus(vmid, baseUrl + SERVERSTATUS_RESOURCE, apiKey)
         
         if serverStatus ==  :not_created 
@@ -285,21 +298,21 @@ module VagrantPlugins
         serverStatus = JSON.parse(serverStatus.to_json)
         shouldParams = JSON.parse(shouldParams.to_json)
         shouldParams.each do |key, value|
+      
           if "#{value}" != "#{serverStatus[key]}"
-            raise VagrantPlugins::Filoo::Errors::UnexpectedStateError,
+            raise VagrantPlugins::Filoo::Errors::InvaildServerParameterError.new(key, serverStatus[key], serverStatus),
               resource: SERVERSTATUS_RESOURCE,
               invalidKey: key,
               invalidValue: value,
               state: serverStatus,
-              message: "Unexpected State of server list " + serverStatus.to_json,
+              message: "Unexpected State of server " + serverStatus.to_json,
               description: "Server with vmid #{vmid} should have following params set " + shouldParams.to_json
                 + " but has status " + serverStatus 
           end
-          return serverStatus
-        end
-        return 
-      end
       
+        end
+        return serverStatus
+      end
       
       #images
       IMAGES_RESOURCE = "/vserver/image"

@@ -3,6 +3,26 @@ require "vagrant"
 module VagrantPlugins
   module Filoo
     module Errors
+      
+      class InvaildServerParameterError < StandardError
+        def initialize(paramName, paramValue, serverStatus)
+          @paramName = paramName
+          @paramValue = paramValue
+          @serverStatus = serverStatus
+        end
+    
+        def paramName
+          return @paramName
+        end
+        
+        def paramValue
+          return @paramValue
+        end
+        
+        def serverStatus
+          return @serverStatus
+        end
+      end
 
       class VagrantFilooError < Vagrant::Errors::VagrantError
         error_namespace("vagrant_filoo.errors")
@@ -15,7 +35,7 @@ module VagrantPlugins
       class ConfigError < VagrantFilooError
         error_key("config_error")
       end
-
+      
       class UnexpectedStateError < VagrantFilooError
         error_key(:unexpected_state_error)
       end
