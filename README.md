@@ -124,15 +124,6 @@ Windows build: https://code.google.com/p/win-sshfs/
 
 See [Vagrant Synced folders: rsync](https://docs.vagrantup.com/v2/synced-folders/rsync.html)
 
-## Synced Folders
-
-There is minimal support for synced folders. Upon `vagrant up`,
-`vagrant reload`, and `vagrant provision`, the Filoo provider will use
-`rsync` (if available) to uni-directionally sync the folder to
-the remote machine over SSH.
-
-See [Vagrant Synced folders: rsync](https://docs.vagrantup.com/v2/synced-folders/rsync.html)
-
 
 ## Other Examples
 

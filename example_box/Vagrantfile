@@ -12,10 +12,13 @@ Vagrant.configure("2") do |config|
     # or to use environment variable uncomment this
     #filoo.filoo_api_entry_point = ENV['FILOO_API_ENTTRY_POINT'] 
     
-    filoo.cd_image_name = "Debian 6.0 - 64bit"
+    filoo.cd_image_name = "Debian 7.7 - 64bit"
     filoo.type =  "dynamic"
     filoo.cpu = 1
     filoo.ram = 128
     filoo.hdd = 10
   end
+  
+  #TODO shell Provisioner 
+  #ifconfig eth1
 end
