@@ -526,7 +526,7 @@ module VagrantPlugins
      #http handling
      def self.doHttpCall(url, params, apiKey)
        if apiKey.nil? or apiKey == ""
-         raise ArgumentError, "apiKey must not be nil and not an empty string"
+         raise ArgumentError, "filoo.filoo_api_key must be set"
        end
        if !(url =~ URI::regexp)
          raise ArgumentError, "url must be a valid http resource but is #{url}"
