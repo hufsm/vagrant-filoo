@@ -136,14 +136,25 @@ See [Vagrant Synced folders: rsync](https://docs.vagrantup.com/v2/synced-folders
 
 
 ## Development
-You have to install vagrant on your machine to develop the plugin
+
+The easiest way to setup the environment is to install ruby with the Rails Installer (http://railsinstaller.org). Also you have to install vagrant on your machine to develop the plugin
 
 To work on the `vagrant-filoo` plugin, clone this repository out, and use
 [Bundler](http://gembundler.com) to get the dependencies:
 
+or run from your "command prompt with ruby and rails"
+
+```
+$ gem install bundler
+```
+
+in the project folder run from your "command prompt with ruby and rails" 
+
 ```
 $ bundle
 ```
+
+If you get an ssl error follow instructions on https://gist.github.com/luislavena/f064211759ee0f806c88
 
 Once you have the dependencies, verify the unit tests pass with `rake`:
 
@@ -171,10 +182,22 @@ $ cd ..
 Use vagrant to add the box
 
 ```
-$ vagrant box add filoo filoo.box
-...
+$ vagrant box add filoo.box
 ```
 
+Copy the example Vagrantfile
+
+```
+cp example_config/Vagrantfile_example Vagrantfile
+```
+
+Edit your filoo api key in Vagrantfile or access Api Key via Environment Variable
+
+```
+    filoo.filoo_api_key = "your filoo api access key" 
+    # or to use environment variable uncomment this
+    #filoo.filoo_api_key = ENV['FILOO_API_KEY']
+```
 
 Use bundler to execute Vagrant:
 ```
