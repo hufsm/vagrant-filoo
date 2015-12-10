@@ -136,6 +136,7 @@ See [Vagrant Synced folders: rsync](https://docs.vagrantup.com/v2/synced-folders
 
 
 ## Development
+You have to install vagrant on your machine to develop the plugin
 
 To work on the `vagrant-filoo` plugin, clone this repository out, and use
 [Bundler](http://gembundler.com) to get the dependencies:
@@ -164,12 +165,13 @@ create a box
 $ cd example_box
 $ tar cvzf filoo.box ./metadata.json ./Vagrantfile
 $ mv filoo.box ../filoo.box
+$ cd ..
 ```
 
-Use bundler to add the box
+Use vagrant to add the box
 
 ```
-$ bundle exec vagrant box add filoo <url to filoo box>
+$ vagrant box add filoo filoo.box
 ...
 ```
 
