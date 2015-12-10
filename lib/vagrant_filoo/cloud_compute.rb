@@ -154,7 +154,7 @@ module VagrantPlugins
         }
 
         begin
-          checkServerParameter(vmid, shouldNotChangeParams, baseUrl, apiKey)
+          compareServerStatus(vmid, shouldNotChangeParams, baseUrl, apiKey)
         rescue VagrantPlugins::Filoo::Errors::InvaildServerParameterError => e
           paramKey = "#{e.paramName}"
           raise VagrantPlugins::Filoo::Errors::ConfigError,
@@ -271,10 +271,14 @@ module VagrantPlugins
         end
       end
       
+      
+      #
+      #
+      #
       def self.checkServerStatus(vmid, shouldParams, baseUrl, apiKey)
         
         begin
-          return checkServerParameter(vmid, shouldParams, baseUrl, apiKey)
+          return compareServerStatus(vmid, shouldParams, baseUrl, apiKey)
         rescue VagrantPlugins::Filoo::Errors::InvaildServerParameterError => e
           raise VagrantPlugins::Filoo::Errors::UnexpectedStateError,
             resource: SERVERSTATUS_RESOURCE,
@@ -286,8 +290,11 @@ module VagrantPlugins
 
       end
       
-      def self.checkServerParameter(vmid, shouldParams, baseUrl, apiKey)
-        serverStatus = self.getServerStatus(vmid, baseUrl + SERVERSTATUS_RESOURCE, apiKey)
+      #
+      # Retrieves the Server status and compares it with the given shouldPramas
+      #
+      def self.compareServerStatus(vmid, shouldParams, baseUrl, apiKey)
+        serverStatus = self.getServerStatus(vmid, baseUrl, apiKey)
         
         if serverStatus ==  :not_created 
           raise VagrantPlugins::Filoo::Errors::UnexpectedStateError, 
