@@ -17,8 +17,6 @@ Vagrant.configure("2") do |config|
     filoo.cpu = 1
     filoo.ram = 128
     filoo.hdd = 10
+    filoo.additional_nic = true #defaults to false
   end
-  
-  #TODO shell Provisioner 
-  #ifconfig eth1
 end

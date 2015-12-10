@@ -16,6 +16,9 @@ module VagrantPlugins
       SERVERSTATUS_RESOURCE = '/vserver/status'
       START_RESOURCE = "/vserver/start"
       STOP_RESOURCE = "/vserver/stop"
+      LIST_NIC_RESOURCE = "/vserver/list_nic"
+      ADD_NIC_RESOURCE = "/vserver/add_nic"
+      DELETE_NIC_RESOURCE = "/vserver/del_nic"
       
       ########################################
       # Virtual Server Creation and checking #
@@ -162,6 +165,15 @@ module VagrantPlugins
              Please create new instance if you need updated this parameters."
         end
           
+        nicList = self.listNic(vmid, baseUrl, apiKey) 
+        
+        if filooConfig.additional_nic && nicList.count < 1
+          self.addNic(vmid, baseUrl, apiKey)
+          
+        elsif !filooConfig.additional_nic && nicList.count > 0 
+          self.deleteNic(vmid, baseUrl, apiKey)
+        end
+        
         url = "#{baseUrl}#{START_RESOURCE}"
         jobId = call4JobId url, apiKey, {:vmid => vmid}
         jobResult = nil;
@@ -258,6 +270,35 @@ module VagrantPlugins
         return serversHash
       end
       
+      # list nic
+      
+      def self.listNic(vmid, baseUrl, apiKey)
+        begin
+          return self.call(baseUrl + LIST_NIC_RESOURCE, apiKey, {:vmid => vmid})["return"]
+        rescue ArgumentError => e
+          raise VagrantPlugins::Filoo::Errors::ConfigError, message: e.message
+        end
+      end
+        
+      # add nic
+      
+      def self.addNic(vmid, baseUrl, apiKey)
+        begin
+          return self.call(baseUrl + ADD_NIC_RESOURCE, apiKey, {:vmid => vmid})["return"]
+        rescue ArgumentError => e
+          raise VagrantPlugins::Filoo::Errors::ConfigError, message: e.message
+        end
+      end
+  
+      # add nic
+      
+      def self.deleteNic(vmid, baseUrl, apiKey)
+        begin
+          return self.call(baseUrl + DELETE_NIC_RESOURCE, apiKey, {:vmid => vmid})["return"]
+        rescue ArgumentError => e
+          raise VagrantPlugins::Filoo::Errors::ConfigError, message: e.message
+        end
+      end          
       # server status
       
       def self.getServerStatus(vmid, baseUrl, apiKey)
@@ -272,9 +313,7 @@ module VagrantPlugins
       end
       
       
-      #
-      #
-      #
+
       def self.checkServerStatus(vmid, shouldParams, baseUrl, apiKey)
         
         begin
@@ -291,7 +330,7 @@ module VagrantPlugins
       end
       
       #
-      # Retrieves the Server status and compares it with the given shouldPramas
+      # Retrieves the Server status and compares it with the given shouldPramams
       #
       def self.compareServerStatus(vmid, shouldParams, baseUrl, apiKey)
         serverStatus = self.getServerStatus(vmid, baseUrl, apiKey)

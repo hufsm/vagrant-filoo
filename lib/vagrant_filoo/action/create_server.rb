@@ -13,6 +13,7 @@ module VagrantPlugins
         end
         
         def call(env)
+
           if (env[:images].nil?)
             raise Errors::ImagesNotLoaded
           end
@@ -21,7 +22,9 @@ module VagrantPlugins
             raise VagrantPlugins::Filoo::Errors::ConfigError, 
               message: "Filoo Configuration parameter 'cd_image_name' with value #{config.cd_image_name} references not a filoo image that has autoinstall flag set. Please use one of the folowing image names #{env[:images].keys.join(' | ')}"
           end
+
           imageId = "#{env[:images][config.cd_image_name]}".to_i
+
           params = {
             :type => config.type,
             :cpu => config.cpu,
@@ -29,6 +32,7 @@ module VagrantPlugins
             :hdd => config.hdd,
             :cd_imageid => imageId
           }
+
           env[:ui].info("vagrant_filoo creating_instance")
           env[:ui].info(" -- Type: #{config.type}")
           env[:ui].info(" -- CPUs: #{config.cpu}")

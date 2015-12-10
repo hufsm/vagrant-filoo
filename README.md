@@ -55,11 +55,17 @@ Vagrant.configure("2") do |config|
   config.vm.box = "dummy"
 
   config.vm.provider :filoo do |filoo, override|
-    filoo.filoo_api_key = "Your Api key"
-    # or to use environment variable uncomment this
-    # filoo.filoo_api_key = ENV['FILOO_API_KEY']
-    filoo.filoo_api_entry_point = "https://api.filoo.de/api/v1"
-    filoo.cd_image_name = "Debian 6.0 - 64bit"
+   filoo.filoo_api_key = "your filoo api access key" 
+   # or to use environment variable uncomment this
+   #filoo.filoo_api_key = ENV['FILOO_API_KEY']
+    
+   filoo.filoo_api_entry_point = "https://api.filoo.de/api/v1"
+   filoo.cd_image_name = "Debian 7.7 - 64bit"
+   filoo.type =  "dynamic"
+   filoo.cpu = 1
+   filoo.ram = 128
+   filoo.hdd = 10
+   filoo.additional_nic = true # defaults to false
   end
 end
 ```

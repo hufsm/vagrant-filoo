@@ -15,6 +15,7 @@ module VagrantPlugins
       attr_accessor :cpu
       attr_accessor :ram
       attr_accessor :hdd
+      attr_accessor :additional_nic
 
       
       
@@ -26,6 +27,7 @@ module VagrantPlugins
         @cpu      = nil
         @ram      = nil
         @hdd      = nil
+        @additional_nic = nil
       end
       
       # set security_groups
@@ -46,7 +48,8 @@ module VagrantPlugins
          @type = 'dynamic' if @type  == nil
          @cpu = 1 if @cpu  == nil
          @ram = 128 if @ram  == nil
-         @hdd = 10 if @hdd  == nil   
+         @hdd = 10 if @hdd  == nil
+         @additional_nic = false if @additional_nic  == nil 
       end
     end
   end
