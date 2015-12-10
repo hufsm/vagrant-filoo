@@ -21,7 +21,7 @@ config.vm.network "public_network", ip: "192.168.0.17"
 
 ## Usage
 
-Install using standard Vagrant 1.1+ plugin installation methods. After installing, `vagrant up` and specify the `filoo` provider. An example is shown below.
+Install using standard Vagrant 1.1+ plugin installation methods. After installing, `vagrant up` and specify the `filoo` provider. An example is shown below. dummy
 
 ```
 $ vagrant plugin install vagrant-filoo
@@ -37,7 +37,7 @@ Of course prior to doing this, you'll need to obtain an Filoo-compatible box fil
 After installing the plugin (instructions above), the quickest way to get started is to actually use a dummy Filoo box and specify all the details manually within a `config.vm.provider` block. So first, add the dummy box using any name you want:
 
 ```
-$ vagrant box add dummy <url to dummy box>
+$ vagrant box add filoo <url to filoo box>
 ...
 ```
 
@@ -52,7 +52,7 @@ as seen in the commented line of config beneath.
 
 ```
 Vagrant.configure("2") do |config|
-  config.vm.box = "dummy"
+  config.vm.box = "filoo"
 
   config.vm.provider :filoo do |filoo, override|
    filoo.filoo_api_key = "your filoo api access key" 
@@ -157,6 +157,23 @@ and add the following line to your `Vagrantfile`
 ```ruby
 Vagrant.require_plugin "vagrant_filoo"
 ```
+
+create a box 
+
+```
+$ cd example_box
+$ tar cvzf filoo.box ./metadata.json ./Vagrantfile
+$ mv filoo.box ../filoo.box
+```
+
+Use bundler to add the box
+
+```
+$ bundle exec vagrant box add filoo <url to filoo box>
+...
+```
+
+
 Use bundler to execute Vagrant:
 ```
 $ bundle exec vagrant up --provider=filoo
