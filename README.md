@@ -55,10 +55,10 @@ Vagrant.configure("2") do |config|
   config.vm.box = "filoo"
 
   config.vm.provider :filoo do |filoo, override|
-   filoo.filoo_api_key = "your filoo api access key" 
+   filoo.filoo_api_key = "your filoo api access key"
    # or to use environment variable uncomment this
    #filoo.filoo_api_key = ENV['FILOO_API_KEY']
-    
+
    filoo.filoo_api_entry_point = "https://api.filoo.de/api/v1"
    filoo.cd_image_name = "Debian 7.7 - 64bit"
    filoo.type =  "dynamic"
@@ -148,7 +148,7 @@ or run from your "command prompt with ruby and rails"
 $ gem install bundler
 ```
 
-in the project folder run from your "command prompt with ruby and rails" 
+in the project folder run from your "command prompt with ruby and rails"
 
 ```
 $ bundle
@@ -170,7 +170,7 @@ and add the following line to your `Vagrantfile`
 Vagrant.require_plugin "vagrant_filoo"
 ```
 
-create a box 
+create a box
 
 ```
 $ cd example_box
@@ -194,7 +194,7 @@ cp example_config/Vagrantfile_example Vagrantfile
 Edit your filoo api key in Vagrantfile or access Api Key via Environment Variable
 
 ```
-    filoo.filoo_api_key = "your filoo api access key" 
+    filoo.filoo_api_key = "your filoo api access key"
     # or to use environment variable uncomment this
     #filoo.filoo_api_key = ENV['FILOO_API_KEY']
 ```
@@ -202,4 +202,11 @@ Edit your filoo api key in Vagrantfile or access Api Key via Environment Variabl
 Use bundler to execute Vagrant:
 ```
 $ bundle exec vagrant up --provider=filoo
+```
+
+Package and publish the plugin
+
+```
+$ rake build
+$ gem push pkg/vagrant_filoo-0.0.1.gem
 ```
