@@ -12,12 +12,7 @@ NOTE: This plugin requires Vagrant 1.7x
 
 #TODO
 - set servername 4.1.16 vserver/setcustomname
-- support network features
-
-```
-config.vm.network "private_network", ip: "192.168.0.17"
-config.vm.network "public_network", ip: "192.168.0.17"
-```
+- Publish to public gem repository
 
 ## Usage
 
@@ -204,7 +199,7 @@ Use bundler to execute Vagrant:
 $ bundle exec vagrant up --provider=filoo
 ```
 
-Package and publish the plugin
+Package and publish the plugin (see https://www.noppanit.com/create-simple-vagrant-plugin/)
 
 ```
 $ rake build
