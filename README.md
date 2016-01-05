@@ -32,7 +32,7 @@ Of course prior to doing this, you'll need to obtain an Filoo-compatible box fil
 After installing the plugin (instructions above), the quickest way to get started is to actually use a dummy Filoo box and specify all the details manually within a `config.vm.provider` block. So first, add the dummy box using any name you want:
 
 ```
-$ vagrant box add filoo <url to filoo box>
+$ vagrant box add filoo https://github.com/hufsm/vagrant-filoo/blob/master/filoo.box
 ...
 ```
 
