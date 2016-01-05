@@ -5,62 +5,64 @@ require 'json'
 module VagrantPlugins
   module Filoo
     module CloudCompute
-      LOGGER = Log4r::Logger.new("vagrant_filoo::cloud_compute")
-      
+      LOGGER = Log4r::Logger.new('vagrant_filoo::cloud_compute')
+
       ################################
       # Application specific methods #
       ################################
-      CREATE_SERVER_RESOURCE = "/vserver/create"
-      DELETE_SERVER_RESOURCE = "/vserver/delete"
-      LIST_SERVER_RESOURCE ="/vserver/list"
+      CREATE_SERVER_RESOURCE = '/vserver/create'
+      DELETE_SERVER_RESOURCE = '/vserver/delete'
+      LIST_SERVER_RESOURCE ='/vserver/list'
       SERVERSTATUS_RESOURCE = '/vserver/status'
-      START_RESOURCE = "/vserver/start"
-      STOP_RESOURCE = "/vserver/stop"
-      LIST_NIC_RESOURCE = "/vserver/list_nic"
-      ADD_NIC_RESOURCE = "/vserver/add_nic"
-      DELETE_NIC_RESOURCE = "/vserver/del_nic"
+      START_RESOURCE = '/vserver/start'
+      STOP_RESOURCE = '/vserver/stop'
+      LIST_NIC_RESOURCE = '/vserver/list_nic'
+      ADD_NIC_RESOURCE = '/vserver/add_nic'
+      DELETE_NIC_RESOURCE = '/vserver/del_nic'
       
       ########################################
       # Virtual Server Creation and checking #
       ########################################
-      
+
       CREATE_SERVER_TIMEOUT = 30
-      VALID_TYPES = ["dynamic","fixed"]
+      VALID_TYPES = ['dynamic','fixed']
       VALID_CPU_COUNTS = [1, 2, 3, 4, 5, 6, 7, 8]
       VALID_RAM = [128, 256, 512, 1024, 2048, 3072, 4096, 5120, 6144, 7186, 8192]
-      
+
       #####################################################################
       # create a virtual server with the given parameters
       # parameters {hash} with following fields
-      #     -type=(dynamic|fixed) : Dynamischer (Minütlicher) oder vServer (Monatlich)
+      #     -type=(dynamic|fixed) : dynmaic (minutely) or vServer (monthly)
       #     -cpu=(1-8): Anzahl vCPUs
       #     -ram=(128,256,512,1024,2048,3072,4096,5120,6144,7186,8192): Ram in MB
-      #     -hdd=(10-2000): Festplattenspeicher in GB, jeweils 10GB-Schritte (10,20,30,...)
-      #     -cd_imageid ID des zu Installierenden Images. Nur Images mit autoinstall=1 sind
-      #                   möglich.
+      #     -hdd=(10-2000): HDDp Space in GB, 10GB-Steps (10,20,30,...)
+      #     -cd_imageid ID. Only for images with autoinstall=1.
       ####################################################################
-      
+
       def self.createServer(params, baseUrl, apiKey)
-        self.checkServerParams(params)
+        checkServerParams(params)
         createServerUrl = baseUrl +  CREATE_SERVER_RESOURCE
         jobId = call4JobId createServerUrl, apiKey, params
         vmid = nil;
         jobResult = nil
+
         begin
           jobResult = waitJobDone(jobId, baseUrl, apiKey, CREATE_SERVER_TIMEOUT)
-          vmid = jobResult[:result]["vmid"]
-          if jobResult[:result]["vmid"].nil?
+          vmid = jobResult[:result]['vmid']
+
+          if jobResult[:result]['vmid'].nil?
             raise VagrantPlugins::Filoo::Errors::FilooApiError,
               code: 500,
               message: "Unexpected return value to Api Call POST " +  createServerUrl + " #{params} " + {:jobid => jobId}.to_json,
               description: "Response has no field vmid in result. Response:  " + jobResult.to_json
           end
+
         rescue VagrantPlugins::Filoo::Errors::FilooJobResultTimeoutError => e
           raise VagrantPlugins::Filoo::Errors::CreateInstanceTimeout,
             job_id: jobId,
             timeout: e.timeout
         rescue VagrantPlugins::Filoo::Errors::FilooJobFailedError => e
-          vmid = jobResult[:result]["vmid"]
+          vmid = jobResult[:result]['vmid']
         end
          
          serverStatus = nil;
@@ -68,9 +70,11 @@ module VagrantPlugins
            :cpu => params[:cpu],
            :ram => params[:ram],
            :hdd => params[:hdd]}
+
          begin
            serverStatus = self.checkServerStatus(vmid, checkParams, baseUrl, apiKey)
            rescue VagrantPlugins::Filoo::Errors::FilooApiError => e
+
              if e.code == 403
                raise VagrantPlugins::Filoo::Errors::UnexpectedStateError,
                  resource: LIST_SERVER_RESOURCE,
@@ -83,34 +87,41 @@ module VagrantPlugins
                      + "Server is not created though system gave feedback with status #{jobResult[:status]} "
                      + "to task  #{jobResult[:job_command]} #{jobResult[:job_param]} with jobid #{jobResult[:jobid]}"
              end
+
              raise e
          end
+ 
          serverStatus
       end
       
       def self.checkServerParams params
+
         if !params.is_a?(Hash)
            raise VagrantPlugins::Filoo::Errors::ConfigError,
              message: "Invalid type of parameter params, must be Hash but is #{params.class}"
-        end    
-        if params[:type].nil? or ! ["dynamic","fixed"].include? params[:type]
+        end
+ 
+        if params[:type].nil? or ! ['dynamic','fixed'].include? params[:type]
           raise VagrantPlugins::Filoo::Errors::ConfigError,
             message: "Invalid value #{params[:type]} for configuration field type, must be one of the following numbers #{VALID_TYPES}"
         end
+
         if params[:cpu].nil? or ! VALID_CPU_COUNTS.include? params[:cpu]
           raise VagrantPlugins::Filoo::Errors::ConfigError,
             message: "Invalid value #{params[:cpu]} for configuration field cpu, must be one of the following numbers #{VALID_CPU_COUNTS}"
         end
+
         if params[:ram].nil? or ! VALID_RAM.include? params[:ram]
-        raise VagrantPlugins::Filoo::Errors::ConfigError,
-          message: "Invalid value #{params[:ram]} for configuration field ram, must be one of the following numbers #{VALID_RAM.to_json}"
-  
+          raise VagrantPlugins::Filoo::Errors::ConfigError,
+            message: "Invalid value #{params[:ram]} for configuration field ram, must be one of the following numbers #{VALID_RAM.to_json}"
         end
+ 
         if params[:hdd].nil? or params[:hdd] < 10  or params[:hdd] > 2000 or params[:hdd] % 10 != 0
           raise VagrantPlugins::Filoo::Errors::ConfigError,
             message: "Invalid value #{params[:hd]} for configuration field hd, must be a number between 10-2000 "
               + " with steps of 10,20,30..."
         end
+
       end
       
       # Server removal
@@ -120,6 +131,7 @@ module VagrantPlugins
         deleteServereUrl = baseUrl +  DELETE_SERVER_RESOURCE
         jobId = call4JobId deleteServereUrl, apiKey, {:vmid => vmid}
         jobResult = nil;
+
         begin
           jobResult = waitJobDone(jobId, baseUrl, apiKey, DELETE_SERVER_TIMEOUT)
         rescue VagrantPlugins::Filoo::Errors::FilooJobResultTimeoutError => e
@@ -127,7 +139,9 @@ module VagrantPlugins
             job_id: jobId,
             timeout: e.timeout
         end
+
         serverList = self.getServers(baseUrl + LIST_SERVER_RESOURCE, apiKey)
+
         if !serverList["#{vmid}"].nil?
           raise VagrantPlugins::Filoo::Errors::UnexpectedStateError,
             resource: LIST_SERVER_RESOURCE,
@@ -140,6 +154,7 @@ module VagrantPlugins
             + "though system gave feedback with status #{jobResult[:status]} to task  "
             + "#{jobResult[:job_command]} #{jobResult[:job_param]} with jobid #{jobResult[:jobid]}" 
         end
+
         return serverList
       end
       
@@ -169,7 +184,6 @@ module VagrantPlugins
         
         if filooConfig.additional_nic && nicList.count < 1
           self.addNic(vmid, baseUrl, apiKey)
-          
         elsif !filooConfig.additional_nic && nicList.count > 0 
           self.deleteNic(vmid, baseUrl, apiKey)
         end
@@ -177,6 +191,7 @@ module VagrantPlugins
         url = "#{baseUrl}#{START_RESOURCE}"
         jobId = call4JobId url, apiKey, {:vmid => vmid}
         jobResult = nil;
+
         begin
           jobResult = waitJobDone(jobId, baseUrl, apiKey, START_INSTANCE_TIMEOUT)
         rescue VagrantPlugins::Filoo::Errors::FilooJobResultTimeoutError => e
@@ -184,9 +199,12 @@ module VagrantPlugins
             job_id: jobId,
             timeout: e.timeout
         end
+
         serverStatus = nil;
+
         begin
           serverStatus = checkServerStatus(vmid, {:vmid => vmid, :vmstatus => "running"}, baseUrl, apiKey)
+
           rescue VagrantPlugins::Filoo::Errors::FilooApiError => e
             if e.code == 403
               raise VagrantPlugins::Filoo::Errors::UnexpectedStateError,
@@ -202,6 +220,7 @@ module VagrantPlugins
             end
             raise e
           end
+
           return serverStatus
         end
       
@@ -213,6 +232,7 @@ module VagrantPlugins
         stopInstanceUrl = baseUrl +  STOP_RESOURCE
         jobId = call4JobId(stopInstanceUrl, apiKey, {:vmid => vmid})
         jobResult = nil
+
         begin
           jobResult = waitJobDone(jobId, baseUrl, apiKey, STOP_INSTANCE_TIMEOUT)
         rescue VagrantPlugins::Filoo::Errors::FilooJobResultTimeoutError => e
@@ -220,7 +240,9 @@ module VagrantPlugins
             job_id: jobId,
             timeout: e.timeout
         end
+
         serverStatus = nil;
+
         begin
           serverStatus = checkServerStatus(vmid, {:vmid => vmid, :vmstatus => "stopped"}, baseUrl, apiKey)
           rescue VagrantPlugins::Filoo::Errors::FilooApiError => e
@@ -238,6 +260,7 @@ module VagrantPlugins
             end
             raise e
         end
+
       end
       
       
@@ -255,8 +278,8 @@ module VagrantPlugins
       def self.hashFromServerList serverList
         serversHash = {}
         serverList.each { |serverInfo| 
-          serversHash[serverInfo["vmid"]] = serverInfo
-          serversHash[serverInfo["vmid"]].delete("vmid")
+          serversHash[serverInfo['vmid']] = serverInfo
+          serversHash[serverInfo['vmid']].delete('vmid')
         }
         return serversHash
       end
@@ -264,8 +287,8 @@ module VagrantPlugins
       def self.hashFromServerList serverList
         serversHash = {}
         serverList.each { |serverInfo| 
-          serversHash[serverInfo["vmid"]] = serverInfo
-          serversHash[serverInfo["vmid"]].delete("vmid")
+          serversHash[serverInfo['vmid']] = serverInfo
+          serversHash[serverInfo['vmid']].delete('vmid')
         }
         return serversHash
       end
@@ -274,7 +297,7 @@ module VagrantPlugins
       
       def self.listNic(vmid, baseUrl, apiKey)
         begin
-          return self.call(baseUrl + LIST_NIC_RESOURCE, apiKey, {:vmid => vmid})["return"]
+          return self.call(baseUrl + LIST_NIC_RESOURCE, apiKey, {:vmid => vmid})['return']
         rescue ArgumentError => e
           raise VagrantPlugins::Filoo::Errors::ConfigError, message: e.message
         end
@@ -283,36 +306,42 @@ module VagrantPlugins
       # add nic
       
       def self.addNic(vmid, baseUrl, apiKey)
+
         begin
-          return self.call(baseUrl + ADD_NIC_RESOURCE, apiKey, {:vmid => vmid})["return"]
+          return self.call(baseUrl + ADD_NIC_RESOURCE, apiKey, {:vmid => vmid})['return']
         rescue ArgumentError => e
           raise VagrantPlugins::Filoo::Errors::ConfigError, message: e.message
         end
+
       end
   
       # add nic
       
       def self.deleteNic(vmid, baseUrl, apiKey)
+
         begin
-          return self.call(baseUrl + DELETE_NIC_RESOURCE, apiKey, {:vmid => vmid})["return"]
+          return self.call(baseUrl + DELETE_NIC_RESOURCE, apiKey, {:vmid => vmid})['return']
         rescue ArgumentError => e
           raise VagrantPlugins::Filoo::Errors::ConfigError, message: e.message
         end
-      end          
+
+      end      
+          
       # server status
       
       def self.getServerStatus(vmid, baseUrl, apiKey)
+
         if vmid.nil?
           return :not_created 
         end
+
         begin
-          return self.call(baseUrl + SERVERSTATUS_RESOURCE, apiKey, {:vmid => vmid, :detailed => true})["return"]
+          return self.call(baseUrl + SERVERSTATUS_RESOURCE, apiKey, {:vmid => vmid, :detailed => true})['return']
         rescue ArgumentError => e
           raise VagrantPlugins::Filoo::Errors::ConfigError, message: e.message
         end
+
       end
-      
-      
 
       def self.checkServerStatus(vmid, shouldParams, baseUrl, apiKey)
         
@@ -372,8 +401,8 @@ module VagrantPlugins
         end
         autoInstallImagesHash = {}
         imageList.each { |imageInfo|
-          if !imageInfo["cd"].nil? and imageInfo["autoinstall"] == 1
-            autoInstallImagesHash[imageInfo["cd"]] = imageInfo["cd_imageid"]
+          if !imageInfo['cd'].nil? and imageInfo['autoinstall'] == 1
+            autoInstallImagesHash[imageInfo['cd']] = imageInfo['cd_imageid']
           end
          }
         return autoInstallImagesHash;
@@ -384,9 +413,9 @@ module VagrantPlugins
       def self.hashAutoInstallListFromImageList serverList
         autoInstallImagesHash = {}
         serverList.each { |imageInfo| 
-          if !imageInfo["cd"].nil? and imageInfo["autoinstall"] == 1
-            autoInstallImagesHash[imageInfo["cd"]] = imageInfo
-            autoInstallImagesHash[imageInfo["cd"]].delete("cd")
+          if !imageInfo['cd'].nil? and imageInfo['autoinstall'] == 1
+            autoInstallImagesHash[imageInfo['cd']] = imageInfo
+            autoInstallImagesHash[imageInfo['cd']].delete("cd")
           end
         }
         return autoInstallImagesHash;
@@ -404,7 +433,7 @@ module VagrantPlugins
      def self.call4JobId(url, apiKey, params)
        apiCallPayload = nil
        begin
-         apiCallPayload = self.call(url, apiKey, params)["return"]
+         apiCallPayload = self.call(url, apiKey, params)['return']
        rescue ArgumentError => e
          raise ConfigError, e.message
        end
@@ -448,7 +477,7 @@ module VagrantPlugins
        rescue ArgumentError => e
          raise ConfigError, e.message
        end
-       if resp["status"]["description"] == "jobID not found"
+       if resp['status']['description'] == "jobID not found"
          raise VagrantPlugins::Filoo::Errors::FilooApiError,
            code: 500,
            message: "Unexpected return value to Api Call POST " +  url + " " + {:jobid => jobId}.to_json,
@@ -456,7 +485,7 @@ module VagrantPlugins
              description: "Requested jobid #{jobId} not found",
              jobid: jobid
        end
-       returnVal = resp["return"]
+       returnVal = resp['return']
        if !returnVal.is_a?(Hash)
          raise VagrantPlugins::Filoo::Errors::FilooApiError,
            code: 500,
@@ -491,9 +520,9 @@ module VagrantPlugins
            return   {:result => jobResult, :status => 'finished', jobid: jobId, job_command: returnVal['job_command'], job_param: returnVal['job_param']}
          when 'failed', 'aborted'
            raise VagrantPlugins::Filoo::Errors::FilooJobFailedError,
-             jobid: returnVal["jobid"],
-             job_command: returnVal["job_command"],
-             job_param: returnVal["job_param"],
+             jobid: returnVal['jobid'],
+             job_command: returnVal['job_command'],
+             job_param: returnVal['job_param'],
              message: "Job Execution Failed for Task #{returnVal['job_command']} with parameters #{returnVal['job_param']} and Job Id #{returnVal['jobid']}:" + resp.to_json
          when 'new', 'processing'
            return nil
@@ -522,7 +551,7 @@ module VagrantPlugins
        end 
        return jsonResp
      end
- 
+
      #http handling
      def self.doHttpCall(url, params, apiKey)
        if apiKey.nil? or apiKey == ""
@@ -531,7 +560,7 @@ module VagrantPlugins
        if !(url =~ URI::regexp)
          raise ArgumentError, "url must be a valid http resource but is #{url}"
        end
-       
+
        boundary = createBoundary
        headers = { Authorization:  apiKey, :content_type => "multipart/form-data; boundary=----#{boundary}"}
        body = createBody(params, boundary)
@@ -543,20 +572,19 @@ module VagrantPlugins
              code: e.http_code,
              message: "Wrong parameter set #{params.to_json} on call to #{url}",
              description: e.http_body
-             
+   
          rescue RestClient::Unauthorized => e
            raise VagrantPlugins::Filoo::Errors::FilooApiError,
              code: e.http_code,
              message: "Can not Authenticate with Api Key",
              description: e.http_body
-                            
+                 
          rescue RestClient::Forbidden => e
            raise VagrantPlugins::Filoo::Errors::FilooApiError,
              code: e.http_code,
              message: "No Access granted on call to #{url} using parameters #{params.to_json}",
              description: e.http_body
-           
-           raise ex
+
          rescue RestClient::NotAcceptable => e
            raise VagrantPlugins::Filoo::Errors::FilooApiError,
              code: e.http_code,
@@ -568,15 +596,17 @@ module VagrantPlugins
              message: e.message
              code -1
        end
+
        if resp.code != 200
          raise VagrantPlugins::Filoo::Errors::FilooApiError, 
-            code: jsonResp["status"]["code"],
-            message: jsonResp["status"]["message"],
-            description: jsonResp["status"]["description"]
+            code: jsonResp['status']['code'],
+            message: jsonResp['status']['message'],
+            description: jsonResp['status']['description']
        end
+
        return resp
      end
- 
+
      def self.createBody(params, boundary)
        body = ""
        params.each do |name, value|
@@ -584,18 +614,16 @@ module VagrantPlugins
        end
        body + "------" + boundary +"--"
      end
-     
+
      def self.createPartFromParam(name, value, boundary)
         "#{boundary}\nContent-Disposition: form-data; name=\"#{name}\"\n\n#{value}\n"
      end
-     
+
      def self.createBoundary
        random = ""; 16.times{random << ((rand(2)==1?65:97) + rand(25)).chr}
        "VagrantFilooHttpClient#{random}"
      end
 
-      
-      
     end
   end
 end

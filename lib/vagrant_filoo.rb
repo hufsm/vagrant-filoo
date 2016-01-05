@@ -1,5 +1,4 @@
 require "pathname"
-
 require "vagrant_filoo/plugin"
 
 module VagrantPlugins

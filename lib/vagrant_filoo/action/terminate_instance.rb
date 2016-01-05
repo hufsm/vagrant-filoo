@@ -7,8 +7,8 @@ module VagrantPlugins
         include VagrantPlugins::Filoo::CloudCompute
         DELETE_SERVER_TIMEOUT = 30
         def initialize(app, env)
-          @app    = app
-          @baseUrl =env[:machine].provider_config.filoo_api_entry_point
+          @app = app
+          @baseUrl = env[:machine].provider_config.filoo_api_entry_point
           @apiKey = env[:machine].provider_config.filoo_api_key
         end
 

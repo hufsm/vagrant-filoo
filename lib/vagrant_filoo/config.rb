@@ -17,8 +17,6 @@ module VagrantPlugins
       attr_accessor :hdd
       attr_accessor :additional_nic
 
-      
-      
       def initialize()
         @filoo_api_key             = nil
         @filoo_api_entry_point      = nil
@@ -29,14 +27,13 @@ module VagrantPlugins
         @hdd      = nil
         @additional_nic = nil
       end
-      
+
       # set security_groups
       def security_groups=(value)
         # convert value to array if necessary
         @security_groups = value.is_a?(Array) ? value : [value]
       end
-      
-      
+
       def finalize!
         # Try to get access keys from standard FILOO environment variables; they
         # will default to nil if the environment variables are not present.
@@ -51,6 +48,7 @@ module VagrantPlugins
          @hdd = 10 if @hdd  == nil
          @additional_nic = false if @additional_nic  == nil 
       end
+
     end
   end
 end

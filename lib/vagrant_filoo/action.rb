@@ -26,7 +26,7 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
           b.use Call, IsCreated do |env, b2|
-            if !env[:result]
+            unless env[:result]
               b2.use MessageNotCreated
               next
             end
@@ -42,7 +42,7 @@ module VagrantPlugins
             if env[:result]
               b2.use ConfigValidate
               b2.use Call, IsCreated do |env2, b3|
-                if !env2[:result]
+                unless env2[:result]
                   b3.use MessageNotCreated
                   next
                 end
@@ -61,13 +61,13 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
           b.use Call, IsCreated do |env, b2|
-            if !env[:result]
+            unless env[:result]
               b2.use MessageNotCreated
               next
             end
 
             b2.use Provision
-            #b2.use SyncedFolders
+            # b2.use SyncedFolders
           end
         end
       end
@@ -86,12 +86,12 @@ module VagrantPlugins
                 if env2[:result]
                   b1.use StartInstance # restart this instance  
                 else
-                  b1.use MessageAlreadyCreated # TODO write a better message
+                  b1.use MessageAlreadyCreated # TODO: write a better message
                 end
               end
             else
-              #b1.use Provision
-              #b1.use SyncedFolders
+              # b1.use Provision
+              # b1.use SyncedFolders
               b1.use GetImages
               b1.use CreateServer do |env2, b2|
                 if env2[:result]["vmstatus"] == "stopped"
@@ -105,7 +105,6 @@ module VagrantPlugins
                 end
               end
               b1.use WaitForCommunicator
-              #b1.use Wait
             end
           end
         end
@@ -116,7 +115,7 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
           b.use Call, IsCreated do |env, b2|
-            if !env[:result]
+            unless env[:result]
               b2.use MessageNotCreated
               next
             end
@@ -131,7 +130,7 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
           b.use Call, IsCreated do |env, b2|
-            if !env[:result]
+            unless env[:result]
               b2.use MessageNotCreated
               next
             end
@@ -156,7 +155,7 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
           b.use Call, IsCreated do |env, b2|
-            if !env[:result]
+            unless env[:result]
               b2.use MessageNotCreated
               next
             end
