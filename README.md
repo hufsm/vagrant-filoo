@@ -8,7 +8,7 @@ This is a Vagrant 1.7x plugin that adds an  provider for filoo hosting to Vagran
 
 htps://www.filoo.de/vserver.html
 
-NOTE: This plugin requires Vagrant 1.7x
+**NOTE:** This plugin requires Vagrant 1.7x
 
 #TODO
 - set servername 4.1.16 vserver/setcustomname
