@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "vagrant_filoo"
 
-  s.add_runtime_dependency "rest-client", "~> 1.8.0"
+  s.add_runtime_dependency "rest-client", "~> 1.6.0"
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec", "~> 2.12"
   s.add_development_dependency "rspec-its"
