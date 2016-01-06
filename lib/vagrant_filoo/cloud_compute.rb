@@ -90,7 +90,10 @@ module VagrantPlugins
 
              raise e
          end
- 
+         
+         if params[:additional_nic]
+            self.addNic(vmid, baseUrl, apiKey)
+         end 
          serverStatus
       end
       
@@ -184,7 +187,7 @@ module VagrantPlugins
         
         if filooConfig.additional_nic && nicList.count < 1
           self.addNic(vmid, baseUrl, apiKey)
-        elsif !filooConfig.additional_nic && nicList.count > 0 
+        elsif !filooConfig.additional_nic && nicList.count > 0
           self.deleteNic(vmid, baseUrl, apiKey)
         end
         
