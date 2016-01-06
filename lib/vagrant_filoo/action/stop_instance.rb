@@ -20,7 +20,9 @@ module VagrantPlugins
             vmid = env[:machine].id
             env[:ui].info("Halt machine #{vmid}")
             env[:result] = VagrantPlugins::Filoo::CloudCompute::stopInstance vmid, @baseUrl, @apiKey
-            env[:ui].info("Machine #{vmid} successfully halted, state #{env[:result].to_json}")
+            env[:ui].info("Machine #{vmid} successfully halted, new state:")
+            env[:ui].info(
+             "#{JSON.pretty_generate(env[:result]).gsub!('{','').gsub!('}','').gsub!('"','').gsub!(',','').gsub!('[','').gsub!(']','')}")
           end      
           @app.call(env)
         end

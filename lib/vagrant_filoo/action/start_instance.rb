@@ -20,7 +20,11 @@ module VagrantPlugins
           env[:metrics] ||= {}
           vmid = env[:machine].id
           env[:result] = VagrantPlugins::Filoo::CloudCompute::startInstance(vmid, @baseUrl, @apiKey, @filooConfig) 
-          env[:ui].info("Machine #{vmid} successfully started, state #{env[:result].to_json}")
+          env[:ui].info("Machine #{vmid} successfully started with config")
+            
+          env[:ui].info(
+            "#{JSON.pretty_generate(env[:result]).gsub!('{','').gsub!('}','').gsub!('"','').gsub!(',','').gsub!('[','').gsub!(']','')}")
+            
           @logger.info("Time to instance ready: #{env[:metrics]["instance_ready_time"]}")
 
           if !env[:interrupted]
