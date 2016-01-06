@@ -30,7 +30,8 @@ module VagrantPlugins
             :cpu => config.cpu,
             :ram => config.ram,
             :hdd => config.hdd,
-            :cd_imageid => imageId
+            :cd_imageid => imageId,
+            :additional_nic => config.additional_nic
           }
 
           env[:ui].info("vagrant_filoo creating_instance")

@@ -5,10 +5,11 @@ Gem::Specification.new do |s|
   s.name          = "vagrant_filoo"
   s.version       = VagrantPlugins::Filoo::VERSION
   s.platform      = Gem::Platform::RUBY
-  s.authors       = "Stefan heuer"
+  s.authors       = "Huf Secure Mobile GmbH"
   s.email         = "stefan.heuer@huf-group.com"
   s.summary       = "Enables Vagrant to manage machines in Filoo infrastructure."
-  s.description   = "Enables Vagrant to manage machines in Filoo infrastructure."
+  s.description   = "Enables Vagrant to manage machines in Filoo infrastructure." +
+  				    "\n hosted on Github: https://github.com/hufsm/vagrant-filoo"
 
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "vagrant_filoo"
