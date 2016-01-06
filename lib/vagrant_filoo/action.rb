@@ -11,7 +11,7 @@ module VagrantPlugins
   module Filoo
     module Action
       
-      # This action is called to read the SSH info of the machine. The
+      # This action is called to read the SSH info of the machine.
       # resulting state is expected to be put into the `:machine_ssh_info`
       # key.
       def self.action_read_ssh_info
