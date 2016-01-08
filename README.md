@@ -55,7 +55,7 @@ Vagrant.configure("2") do |config|
    #filoo.filoo_api_key = ENV['FILOO_API_KEY']
 
    filoo.filoo_api_entry_point = "https://api.filoo.de/api/v1"
-   filoo.cd_image_name = "Debian 7.7 - 64bit"
+   filoo.cd_image_name = "Debian 8.0 - 64bit"
    filoo.type =  "dynamic"
    filoo.cpu = 1
    filoo.ram = 128
@@ -103,7 +103,7 @@ Vagrant.configure("2") do |config|
     config.vm.hostname = "your-hostname"
     filoo.filoo_api_key = "foo"
     filoo.filoo_api_entry_point = "bar"
-    filoo.cd_image_name = "foo-bar"
+    filoo.cd_image_name = "SELECT FROM LIST BELOW"
   end
 end
 ```
@@ -129,20 +129,22 @@ See [Vagrant Synced folders: rsync](https://docs.vagrantup.com/v2/synced-folders
 
 ## filoo Images you can use
 
-* ubuntu_1204_64bit_de
-* ubuntu_1404_64bit_de
-* ubuntu_1504_64bit_de
-* debian_700_64bit_de
-* debian_770_64bit_de
-* debian_800_64bit_de
-
-Exoten die möglich sind:
-* centos_63_64bit_de
-* centos_70_64bit_de
-* fedora_18_64bit_de
-* fedora_20_64bit_de
-* debian+froxlor_770_64bit_de
-* balanceNG_3.375-1_64bit
+* Debian 6.0 - 64bit
+* Endian 2.5.1 Firewall
+* BalanceNG V3.3 Loadbalancer
+* Ubuntu 12.04.4 LTS Server - 64bit
+* CentOS 6.3 - 64bit
+* Fedora 18 - 64bit
+* OpenSUSE 12.3 - 64bit
+* OpenSUSE 13.1 - 64bit
+* Fedora 20 - 64bit
+* Ubuntu 14.04 LTS Server - 64bit
+* CentOS 7.0 - 64bit
+* Debian 7.7 - 64bit
+* Debian 7.7 - 64bit + Froxlor
+* Ubuntu 15.04 Server - 64bit
+* Debian 8.0 - 64bit
+* OwnCloud 8.1.2 - 64 bit
 
 
 
