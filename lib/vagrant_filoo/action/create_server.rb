@@ -35,15 +35,6 @@ module VagrantPlugins
           env[:result] = VagrantPlugins::Filoo::CloudCompute::createServer(@baseUrl, @apiKey, config, imageId)
           env[:machine].id = env[:result]["vmid"]
           env[:ui].info(" -- Server created with config")
-          #env[:machine].name  = env[:result]["custom_vmname"]
-          #env[:result].each do |key, |
-          #  if value.kind_of?(String)
-          #    env[:ui].info("      #{key}: #{value}")
-          #  elsif value.kind_of?(Array)
-          #  elsif value.kind_of?(Hash)
-          #  end
-          #end
-          #env[:ui].info(" -- Server created, server state #{env[:result]}")
           env[:ui].info(" -- Server created with config")
           env[:ui].info(
             "#{JSON.pretty_generate(env[:result]).gsub!('{','').gsub!('}','').gsub!('"','').gsub!(',','').gsub!('[','').gsub!(']','')}")
