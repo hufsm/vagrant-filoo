@@ -24,7 +24,7 @@ module VagrantPlugins
       # Virtual Server Creation and checking #
       ########################################
 
-      CREATE_SERVER_TIMEOUT = 30
+      CREATE_SERVER_TIMEOUT = 300
       VALID_TYPES = ['dynamic','fixed']
       VALID_CPU_COUNTS = [1, 2, 3, 4, 5, 6, 7, 8]
       VALID_RAM = [128, 256, 512, 1024, 2048, 3072, 4096, 5120, 6144, 7186, 8192]
@@ -138,7 +138,7 @@ module VagrantPlugins
       end
       
       # Server removal
-      DELETE_SERVER_TIMEOUT = 30
+      DELETE_SERVER_TIMEOUT = 120
       
       def self.deleteServer(vmid, baseUrl, apiKey)
         deleteServereUrl = baseUrl +  DELETE_SERVER_RESOURCE
@@ -173,7 +173,7 @@ module VagrantPlugins
       
       # start server
       
-      START_INSTANCE_TIMEOUT = 60
+      START_INSTANCE_TIMEOUT = 120
       
       def self.startInstance(vmid, baseUrl, apiKey, filooConfig)
 
@@ -243,7 +243,7 @@ module VagrantPlugins
       
       # stop instance
       
-      STOP_INSTANCE_TIMEOUT = 60
+      STOP_INSTANCE_TIMEOUT = 120
       
       def self.stopInstance(vmid, baseUrl, apiKey)
         stopInstanceUrl = baseUrl +  STOP_RESOURCE
@@ -480,6 +480,7 @@ module VagrantPlugins
          end
          sleep 3
        end
+       puts result
        result
      end
  
