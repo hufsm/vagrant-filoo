@@ -200,9 +200,11 @@ module VagrantPlugins
           self.stopInstance(vmid, baseUrl, apiKey)
           self.startInstance(vmid, baseUrl, apiKey, filooConfig)
         elsif !filooConfig.additional_nic && nicList.count > 0
-          self.deleteNic(vmid, baseUrl, apiKey)
-          self.stopInstance(vmid, baseUrl, apiKey)
-          self.startInstance(vmid, baseUrl, apiKey, filooConfig)
+          raise VagrantPlugins::Filoo::Errors::ConfigError,
+                       message: "Provider parameter 'additional_nic' can not be reset to false, please set parameter 'additional_nic' back to true in Vagrantfile"
+          #self.deleteNic(vmid, baseUrl, apiKey)
+          #self.stopInstance(vmid, baseUrl, apiKey)
+          #self.startInstance(vmid, baseUrl, apiKey, filooConfig)
         end
         
         url = "#{baseUrl}#{START_RESOURCE}"
