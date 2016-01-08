@@ -129,22 +129,20 @@ See [Vagrant Synced folders: rsync](https://docs.vagrantup.com/v2/synced-folders
 
 ## filoo Images you can use
 
-ubuntu_1204_64bit_de
-ubuntu_1404_64bit_de
-ubuntu_1504_64bit_de
-
-debian_700_64bit_de
-debian_770_64bit_de
-debian_800_64bit_de
+* ubuntu_1204_64bit_de
+* ubuntu_1404_64bit_de
+* ubuntu_1504_64bit_de
+* debian_700_64bit_de
+* debian_770_64bit_de
+* debian_800_64bit_de
 
 Exoten die möglich sind:
-
-centos_63_64bit_de
-centos_70_64bit_de
-fedora_18_64bit_de
-fedora_20_64bit_de
-debian+froxlor_770_64bit_de
-balanceNG_3.375-1_64bit
+* centos_63_64bit_de
+* centos_70_64bit_de
+* fedora_18_64bit_de
+* fedora_20_64bit_de
+* debian+froxlor_770_64bit_de
+* balanceNG_3.375-1_64bit
 
 
 
