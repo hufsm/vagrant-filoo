@@ -1,4 +1,4 @@
-# vagrant_filoo 0.0.3
+# vagrant_filoo 0.0.4
 Vagrant filoo provisioner
 
 This is a Vagrant 1.7x plugin that adds an  provider for filoo hosting to Vagrant, allowing Vagrant to control and provision machines within the filoo public and private cloud.
