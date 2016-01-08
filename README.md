@@ -100,6 +100,7 @@ Vagrant.configure("2") do |config|
   # ... other stuff
 
   config.vm.provider :filoo do |filoo|
+    config.vm.hostname = "your-hostname"
     filoo.filoo_api_key = "foo"
     filoo.filoo_api_entry_point = "bar"
     filoo.cd_image_name = "foo-bar"
@@ -126,7 +127,25 @@ Windows build: https://code.google.com/p/win-sshfs/
 See [Vagrant Synced folders: rsync](https://docs.vagrantup.com/v2/synced-folders/rsync.html)
 
 
-## Other Examples
+## filoo Images you can use
+
+ubuntu_1204_64bit_de
+ubuntu_1404_64bit_de
+ubuntu_1504_64bit_de
+
+debian_700_64bit_de
+debian_770_64bit_de
+debian_800_64bit_de
+
+Exoten die möglich sind:
+
+centos_63_64bit_de
+centos_70_64bit_de
+fedora_18_64bit_de
+fedora_20_64bit_de
+debian+froxlor_770_64bit_de
+balanceNG_3.375-1_64bit
+
 
 
 
