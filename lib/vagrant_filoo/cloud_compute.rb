@@ -535,10 +535,11 @@ module VagrantPlugins
            end
            return   {:result => jobResult, :status => 'finished', jobid: jobId, job_command: returnVal['job_command'], job_param: returnVal['job_param']}
          when 'failed', 'aborted'
+           puts returnVal
            raise VagrantPlugins::Filoo::Errors::FilooJobFailedError,
-             jobid: returnVal['jobid'],
-             job_command: returnVal['job_command'],
-             job_param: returnVal['job_param'],
+             #jobid: returnVal['jobid'],
+             #job_command: returnVal['job_command'],
+             #job_param: returnVal['job_param'],
              message: "Job Execution Failed for Task #{returnVal['job_command']} with parameters #{returnVal['job_param']} and Job Id #{returnVal['jobid']}:" + resp.to_json
          when 'new', 'processing'
            return nil

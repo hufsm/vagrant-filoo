@@ -29,11 +29,9 @@ en:
           Error Code %{code}
           Description %{description}
       filoo_job_failed_error: |-
-          The remote processing of filoo job %{job_command} %{job_param} with uuid %{job_id} ended with status failed
+          The remote processing of filoo job ended with status failed or aborded
           Message %{message}
-          Command %{job_command}
-          Params %{job_param}
-          Job ID {job_id}
+          
       filoo_job_result_timeout_error: "The remote processing of filo job with uuid %{job_id} took more than the specified timeout of %{timeout} seconds. "
       gen_error: |-
           Configuration Error detected.
