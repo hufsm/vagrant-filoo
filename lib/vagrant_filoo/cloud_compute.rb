@@ -101,8 +101,8 @@ module VagrantPlugins
          
          if params[:additional_nic]
            self.addNic(vmid, baseUrl, apiKey)
-           #self.stopInstance(vmid, baseUrl, apiKey)
-           #self.startInstance(vmid, baseUrl, apiKey, filooConfig)
+           self.stopInstance(vmid, baseUrl, apiKey)
+           self.startInstance(vmid, baseUrl, apiKey, filooConfig)
          end 
          serverStatus
       end
