@@ -26,22 +26,13 @@ module VagrantPlugins
 
           imageId = "#{env[:images][config.cd_image_name]}".to_i
 
-          params = {
-            :type => config.type,
-            :cpu => config.cpu,
-            :ram => config.ram,
-            :hdd => config.hdd,
-            :cd_imageid => imageId,
-            :additional_nic => config.additional_nic
-          }
-
           env[:ui].info("vagrant_filoo creating_instance")
           env[:ui].info(" -- Type: #{config.type}")
           env[:ui].info(" -- CPUs: #{config.cpu}")
           env[:ui].info(" -- Ram: #{config.ram}")
           env[:ui].info(" -- Image Id: #{imageId}")
           env[:ui].info(" -- Image Name: #{config.cd_image_name}")
-          env[:result] = VagrantPlugins::Filoo::CloudCompute::createServer(params, @baseUrl, @apiKey)
+          env[:result] = VagrantPlugins::Filoo::CloudCompute::createServer(@baseUrl, @apiKey, config, imageId)
           env[:machine].id = env[:result]["vmid"]
           env[:ui].info(" -- Server created with config")
           #env[:machine].name  = env[:result]["custom_vmname"]

@@ -39,7 +39,15 @@ module VagrantPlugins
       #     -cd_imageid ID. Only for images with autoinstall=1.
       ####################################################################
 
-      def self.createServer(params, baseUrl, apiKey)
+      def self.createServer(baseUrl, apiKey, filooConfig, imageId)
+        params = {
+          :type => filooConfig.type,
+          :cpu => filooConfig.cpu,
+          :ram => filooConfig.ram,
+          :hdd => filooConfig.hdd,
+          :cd_imageid => imageId,
+          :additional_nic => filooConfig.additional_nic
+        }
         checkServerParams(params)
         createServerUrl = baseUrl +  CREATE_SERVER_RESOURCE
         jobId = call4JobId createServerUrl, apiKey, params
@@ -92,7 +100,9 @@ module VagrantPlugins
          end
          
          if params[:additional_nic]
-            self.addNic(vmid, baseUrl, apiKey)
+           self.addNic(vmid, baseUrl, apiKey)
+           #self.stopInstance(vmid, baseUrl, apiKey)
+           #self.startInstance(vmid, baseUrl, apiKey, filooConfig)
          end 
          serverStatus
       end
@@ -187,8 +197,12 @@ module VagrantPlugins
         
         if filooConfig.additional_nic && nicList.count < 1
           self.addNic(vmid, baseUrl, apiKey)
+          self.stopInstance(vmid, baseUrl, apiKey)
+          self.startInstance(vmid, baseUrl, apiKey, filooConfig)
         elsif !filooConfig.additional_nic && nicList.count > 0
           self.deleteNic(vmid, baseUrl, apiKey)
+          self.stopInstance(vmid, baseUrl, apiKey)
+          self.startInstance(vmid, baseUrl, apiKey, filooConfig)
         end
         
         url = "#{baseUrl}#{START_RESOURCE}"
@@ -315,10 +329,9 @@ module VagrantPlugins
         rescue ArgumentError => e
           raise VagrantPlugins::Filoo::Errors::ConfigError, message: e.message
         end
-
       end
   
-      # add nic
+      # delete nic
       
       def self.deleteNic(vmid, baseUrl, apiKey)
 
@@ -327,7 +340,6 @@ module VagrantPlugins
         rescue ArgumentError => e
           raise VagrantPlugins::Filoo::Errors::ConfigError, message: e.message
         end
-
       end      
           
       # server status
