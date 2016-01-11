@@ -1,4 +1,4 @@
-# vagrant_filoo 0.0.4
+# vagrant_filoo 0.0.4 Setting hostname...
 Vagrant filoo provisioner
 
 This is a Vagrant 1.7x plugin that adds an  provider for filoo hosting to Vagrant, allowing Vagrant to control and provision machines within the filoo public and private cloud.
@@ -26,6 +26,8 @@ $ vagrant up --provider=filoo
 ```
 
 Of course prior to doing this, you'll need to obtain an Filoo-compatible box file for Vagrant.
+
+Please set hostname when provisioning the machine
 
 ## Quick Start
 
