@@ -499,9 +499,8 @@ module VagrantPlugins
          raise VagrantPlugins::Filoo::Errors::FilooApiError,
            code: 500,
            message: "Unexpected return value to Api Call POST " +  url + " " + {:jobid => jobId}.to_json,
-             code: 500,
-             description: "Requested jobid #{jobId} not found",
-             jobid: jobid
+           description: "Requested jobid #{jobId} not found",
+           jobid: jobid
        end
        returnVal = resp['return']
        if !returnVal.is_a?(Hash)
