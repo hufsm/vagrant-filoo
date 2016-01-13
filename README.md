@@ -19,7 +19,7 @@ htps://www.filoo.de/vserver.html
 Install using standard Vagrant 1.1+ plugin installation methods. After installing, `vagrant up` and specify the `filoo` provider. An example is shown below. dummy
 
 ```
-$ vagrant plugin install vagrant-filoo
+$ vagrant plugin install vagrant_filoo
 ...
 $ vagrant up --provider=filoo
 ...
