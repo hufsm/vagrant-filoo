@@ -1,135 +1,62 @@
-# vagrant_filoo 0.0.5 Setting hostname...
-Vagrant filoo provisioner
+# vagrant-filoo
+This is a Vagrant 1.7x plugin. It adds an vagrant provider for filoo hosting to Vagrant, allowing Vagrant to control and provision machines within the filoo public and private cloud.
 
-This is a Vagrant 1.7x plugin that adds an  provider for filoo hosting to Vagrant, allowing Vagrant to control and provision machines within the filoo public and private cloud.
-
-
-![htps://www.filoo.de/vserver.html](/doc/img_res/filoo_logo.png?raw=true )
+![htps://www.filoo.de/vserver.html](/doc/img_res/filoo_logo.png?raw=true ) 
 
 htps://www.filoo.de/vserver.html
 
 **NOTE:** This plugin requires Vagrant 1.7x
 
-#TODO
-- set servername 4.1.16 vserver/setcustomname
-- Publish to public gem repository
+## Changelog
+The current version is 0.0.5. Here you'll find the gem: https://rubygems.org/gems/vagrant_filoo
+Her you can read the full changelog [changelog](changelog.md)
+
+
+## TODO
+- set servername 4.1.16 vserver/setcustomname (API doews not support it)
+- set initial root passwort of a machine for modification and delete actions to improve machine security
 
 ## Usage
 
-Install using standard Vagrant 1.1+ plugin installation methods. After installing, `vagrant up` and specify the `filoo` provider. An example is shown below. dummy
+Install using standard Vagrant 1.1+ plugin installation methods. After installing, `vagrant up`, specify the `filoo` provider and import a dummy vagrant box:
 
 ```
-$ vagrant plugin install vagrant_filoo
-...
+$ vagrant plugin install vagrant-filoo
 $ vagrant up --provider=filoo
-...
-```
-
-Of course prior to doing this, you'll need to obtain an Filoo-compatible box file for Vagrant.
-
-Please set hostname when provisioning the machine
-
-## Quick Start
-
-After installing the plugin (instructions above), the quickest way to get started is to actually use a dummy Filoo box and specify all the details manually within a `config.vm.provider` block. So first, add the dummy box using any name you want:
-
-```
 $ vagrant box add filoo https://github.com/hufsm/vagrant-filoo/raw/master/filoo.box
-...
 ```
 
-And then make a Vagrantfile that looks like the following, filling in your information where necessary.
+After installing the plugin (instructions above), the quickest way to get started is to specify all the details manually within a `config.vm.provider` block of your Vagrantfile. You can either adapt the example to your needs or start from scratch by initiating a Vagrantfile
 
-It is good practice to access the filoo api key via system environment variable. To use environment variable FILOO_API_KEY add following line in the Vagrantfile
 ```
-filoo.filoo_api_key = ENV['FILOO_API_KEY']
+$ vagrant init --provider=filoo
 ```
 
-as seen in the commented line of config beneath.
+It is good practice to access the filoo api key via system environment variable. To use environment variable FILOO_API_KEY add following line in the Vagrantfile or set the varaible in your OS: FILOO_API_KEY=<your api key>
 
 ```
 Vagrant.configure("2") do |config|
-  config.vm.box = "filoo"
+  config.vm.box = "dummy"
 
   config.vm.provider :filoo do |filoo, override|
-   filoo.filoo_api_key = "your filoo api access key"
-   # or to use environment variable uncomment this
-   #filoo.filoo_api_key = ENV['FILOO_API_KEY']
-
-   filoo.filoo_api_entry_point = "https://api.filoo.de/api/v1"
-   filoo.cd_image_name = "Debian 8.0 - 64bit"
-   filoo.type =  "dynamic"
-   filoo.cpu = 1
-   filoo.ram = 128
-   filoo.hdd = 10
-   filoo.additional_nic = true # defaults to false
+    # to carry the API Key in the Vagrantfile  comment this out:
+    #filoo.filoo_api_key = "Your Api key"
+    filoo.filoo_api_key = ENV['FILOO_API_KEY']
+    filoo.filoo_api_entry_point = "https://api.filoo.de/api/v1"
+    filoo.cd_image_name = "Debian 6.0 - 64bit"
+    
+    filoo.type =  "dynamic"
+    filoo.cpu = 1
+    filoo.ram = 128
+    filoo.hdd = 10
+    filoo.additional_nic = false # defaults to false. Reconfigure is not possible
   end
 end
 ```
 
-And then run 'vagrant up --provider=filoo'.
+###Availeable OS images
 
-This will start an Debian 6.0 - 64bit instance in the Filoo infrastructure
-
-Note that normally a lot of this boilerplate is encoded within the box
-file, but the box file used for the quick start, the "dummy" box, has
-no preconfigured defaults.
-
-
-## Box Format
-
-Every provider in Vagrant must introduce a custom box format. This
-provider introduces `filoo` boxes. You can view an example box in
-the [example_box/ directory](<path to repository>/example_box).
-That directory also contains instructions on how to build a box.
-
-The box format is basically just the required `metadata.json` file
-along with a `Vagrantfile` that does default settings for the
-provider-specific configuration for this provider.
-
-## Configuration
-
-This provider exposes quite a few provider-specific configuration options:
-
-* `filoo_api_key` - The api key for accessing Filoo
-* `cd_image_name` - The Filoo omage name to boot, such as ""Debian 6.0 - 64bit"
-* `filoo_api_entry_point` - The base url to the api "https://api.filoo.de/api/v1"
-
-These can be set like typical provider-specific configuration:
-
-```ruby
-Vagrant.configure("2") do |config|
-  # ... other stuff
-
-  config.vm.provider :filoo do |filoo|
-    config.vm.hostname = "your-hostname"
-    filoo.filoo_api_key = "foo"
-    filoo.filoo_api_entry_point = "bar"
-    filoo.cd_image_name = "SELECT FROM LIST BELOW"
-  end
-end
-```
-
-## Networks
-
-Networking features in the form of `config.vm.network` are not
-supported with `vagrant-filoo`, currently. If any of these are
-specified, Vagrant will emit a warning, but will otherwise boot
-the filoo machine.
-
-## Synced Folders
-
-Shared folders are not supported at the current state.
-
-Linux and Windows clients optionally can use sshfs to mount a folder on the network or to connect a network drive. While the Linux implementation via fuse is quite stable the windows variant is not. We have successfully  tested under Windows 7. Under Windows the re-connect after a network cut-off sometimes fails.
-
-General Information: https://de.wikipedia.org/wiki/SSHFS
-Windows build: https://code.google.com/p/win-sshfs/
-
-See [Vagrant Synced folders: rsync](https://docs.vagrantup.com/v2/synced-folders/rsync.html)
-
-
-## filoo Images you can use
+The example above installs a Debian Image. Please find below the currently availeable images you can use
 
 * Debian 6.0 - 64bit
 * Endian 2.5.1 Firewall
@@ -148,7 +75,54 @@ See [Vagrant Synced folders: rsync](https://docs.vagrantup.com/v2/synced-folders
 * Debian 8.0 - 64bit
 * OwnCloud 8.1.2 - 64 bit
 
+###Start the machine
+And finally run 'vagrant up --provider=filoo' within the folder where you have placed your Vagrantfile.
+It may take a while. Once the machine has started and your FILOO_API_KEY ist set aou can yiuse the basic vagrant tools to interact with your machine:
 
+```
+$ vagrant up --provider=filoo
+...#wait
+$ vagrant ssh
+```
+
+## Box Format
+
+Every provider in Vagrant must introduce a custom box format. This
+provider introduces `filoo` boxes. You can view an example box in
+the [example_box/ directory](<path to repository>/example_box).
+That directory also contains instructions on how to build a box.
+
+The box format is basically just the required `metadata.json` file
+along with a `Vagrantfile` that does default settings for the
+provider-specific configuration for this provider.
+
+## Configuration
+
+This provider exposes a few provider-specific configuration options:
+
+* `filoo_api_key` - The api key for accessing Filoo
+* `cd_image_name` - The Filoo image name to boot, such as "Debian 6.0 - 64bit"
+* `filoo_api_entry_point` - The base url to the api "https://api.filoo.de/api/v1"
+
+These can be set like typical provider-specific configuration:
+
+## Networks
+
+Networking features in the form of `config.vm.network` are not
+supported with `vagrant-filoo`, currently. If any of these are
+specified, Vagrant will emit a warning, but will otherwise boot
+the filoo machine.
+
+## Synced Folders
+
+Shared folders are not supported at the current state.
+
+Linux and Windows clients optionally can use sshfs to mount a folder on the network or to connect a network drive. While the Linux implementation via fuse is quite stable the windows variant is not. We have successfully  tested under Windows 7. Under Windows the re-connect after a network cut-off sometimes fails.
+
+General Information: https://de.wikipedia.org/wiki/SSHFS
+Windows build: https://code.google.com/p/win-sshfs/
+
+See [Vagrant Synced folders: rsync](https://docs.vagrantup.com/v2/synced-folders/rsync.html)
 
 
 ## Development
@@ -225,4 +199,3 @@ Package and publish the plugin (see https://www.noppanit.com/create-simple-vagra
 ```
 $ rake build
 $ gem push pkg/vagrant_filoo-0.0.1.gem
-```
