@@ -21,9 +21,9 @@ Her you can read the full changelog [changelog](changelog.md)
 Install using standard Vagrant 1.1+ plugin installation methods. After installing, `vagrant up`, specify the `filoo` provider and import a dummy vagrant box:
 
 ```
-$ vagrant plugin install vagrant-filoo
-$ vagrant up --provider=filoo
+$ vagrant plugin install vagrant_filoo
 $ vagrant box add filoo https://github.com/hufsm/vagrant-filoo/raw/master/filoo.box
+$ vagrant up --provider=filoo
 ```
 
 After installing the plugin (instructions above), the quickest way to get started is to specify all the details manually within a `config.vm.provider` block of your Vagrantfile. You can either adapt the example to your needs or start from scratch by initiating a Vagrantfile
