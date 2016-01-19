@@ -8,11 +8,13 @@ htps://www.filoo.de/vserver.html
 **NOTE:** This plugin requires Vagrant 1.7x
 
 ## Changelog
-The current version is 0.0.5. Here you'll find the gem: https://rubygems.org/gems/vagrant_filoo
-Her you can read the full changelog [changelog](changelog.md)
 
+* You find the most current version [here](https://github.com/hufsm/vagrant-filoo/releases/latest) 
+* Grab the [gem](https://rubygems.org/gems/vagrant_filoo)
+* The [Changelog](changelog.md) shows you the latest changes!
 
 ## TODO
+
 - set servername 4.1.16 vserver/setcustomname (API doews not support it)
 - set initial root passwort of a machine for modification and delete actions to improve machine security
 
