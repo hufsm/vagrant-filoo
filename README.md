@@ -9,9 +9,8 @@ htps://www.filoo.de/vserver.html
 
 ## Changelog
 
-* You find the most current version [here](https://github.com/hufsm/vagrant-filoo/releases/latest) 
+* You find the most current version on the [Release](https://github.com/hufsm/vagrant-filoo/releases/latest) page along with a changelog
 * Grab the [gem](https://rubygems.org/gems/vagrant_filoo)
-* The [Changelog](changelog.md) shows you the latest changes!
 
 ## TODO
 
