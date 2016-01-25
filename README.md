@@ -14,7 +14,7 @@ htps://www.filoo.de/vserver.html
 
 ## TODO
 
-- set servername 4.1.16 vserver/setcustomname (API doews not support it)
+- set servername 4.1.16 vserver/setcustomname (API does not support it yet)
 - set initial root passwort of a machine for modification and delete actions to improve machine security
 
 ## Usage
