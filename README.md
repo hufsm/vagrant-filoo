@@ -37,20 +37,19 @@ It is good practice to access the filoo api key via system environment variable.
 
 ```
 Vagrant.configure("2") do |config|
-  config.vm.box = "dummy"
+  config.vm.box = "filoo"
 
-  config.vm.provider :filoo do |filoo, override|
+  config.vm.provider :filoo do |filoo|
     # to carry the API Key in the Vagrantfile  comment this out:
     #filoo.filoo_api_key = "Your Api key"
     filoo.filoo_api_key = ENV['FILOO_API_KEY']
     filoo.filoo_api_entry_point = "https://api.filoo.de/api/v1"
-    filoo.cd_image_name = "Debian 6.0 - 64bit"
-    
+    filoo.cd_image_name = "Debian 8.0 - 64bit"
     filoo.type =  "dynamic"
-    filoo.cpu = 1
-    filoo.ram = 128
+    filoo.cpu = 4
+    filoo.ram = 8192
     filoo.hdd = 10
-    filoo.additional_nic = false # defaults to false. Reconfigure is not possible
+    filoo.additional_nic = false #defaults to false. Reconfigure is not possible
   end
 end
 ```
